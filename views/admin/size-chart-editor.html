@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📏 Edit Size Chart</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2d3748; color: white; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #cbd5e0; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { color: white; }
+        .white-box { background: white; color: black; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .product-info { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .btn { background: #3182ce; color: white; padding: 8px 16px; border: none; border-radius: 4px; text-decoration: none; display: inline-block; margin: 5px; cursor: pointer; }
+        .btn:hover { background: #2c5aa0; }
+        .btn-green { background: #38a169; }
+        .btn-green:hover { background: #2f855a; }
+        .btn-red { background: #e53e3e; }
+        .btn-red:hover { background: #c53030; }
+        .size-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .size-table th, .size-table td { border: 1px solid #e2e8f0; padding: 10px; text-align: center; }
+        .size-table th { background: #f7fafc; font-weight: bold; }
+        .size-table input { width: 80px; padding: 5px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; }
+        .add-row-btn { background: #48bb78; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0; }
+        .remove-btn { background: #e53e3e; color: white; padding: 2px 6px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .unit-selector { margin: 10px 0; }
+        .unit-selector label { margin-right: 10px; }
+        .success { background: #c6f6d5; color: #22543d; padding: 10px; border-radius: 4px; margin: 10px 0; }
+        .customer-url { background: #bee3f8; border: 1px solid #3182ce; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .url-display { background: #f7fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 4px; margin: 10px 0; font-family: monospace; font-size: 14px; word-break: break-all; }
+        h1 { color: white; }
+        select { padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">🏠 Home</a>
+            <a href="/admin/products">📏 Size Charts</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+        
+        <h1>📏 Edit Size Chart</h1>
+        
+        <div class="white-box">
+            <div class="product-info">
+                <h3 id="productName">👕 T-Shirt Cotton</h3>
+                <p><strong>Price:</strong> <span id="productPrice">50.00 SAR</span> | <strong>ID:</strong> <span id="productId">1</span></p>
+            </div>
+            
+            <h3>Size Measurements</h3>
+            
+            <div class="unit-selector">
+                <strong>Measurement Unit:</strong>
+                <label><input type="radio" name="unit" value="cm" checked> Centimeters (cm)</label>
+                <label><input type="radio" name="unit" value="inches"> Inches</label>
+            </div>
+            
+            <table class="size-table" id="sizeTable">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Waist</th>
+                        <th>Length</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sizeTableBody">
+                    <tr>
+                        <td><input type="text" value="S" class="size-input"></td>
+                        <td><input type="number" placeholder="85" class="chest-input"></td>
+                        <td><input type="number" placeholder="75" class="waist-input"></td>
+                        <td><input type="number" placeholder="65" class="length-input"></td>
+                        <td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" value="M" class="size-input"></td>
+                        <td><input type="number" placeholder="90" class="chest-input"></td>
+                        <td><input type="number" placeholder="80" class="waist-input"></td>
+                        <td><input type="number" placeholder="67" class="length-input"></td>
+                        <td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" value="L" class="size-input"></td>
+                        <td><input type="number" placeholder="95" class="chest-input"></td>
+                        <td><input type="number" placeholder="85" class="waist-input"></td>
+                        <td><input type="number" placeholder="69" class="length-input"></td>
+                        <td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button class="add-row-btn" onclick="addRow()">+ Add Size</button>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn btn-green" onclick="saveChart()">💾 Save Size Chart</button>
+                <a href="/admin/products" class="btn">← Back to Products</a>
+            </div>
+            
+            <div id="saveMessage" style="display: none;"></div>
+        </div>
+        
+        <div class="customer-url">
+            <h3>🔗 Customer Size Recommendation URL</h3>
+            <p>Share this URL with your customers so they can get size recommendations:</p>
+            <div class="url-display" id="customerUrl">
+                http://localhost:8082/recommend/MERCHANT_ID/1
+            </div>
+            <button class="btn" onclick="copyUrl()">📋 Copy URL</button>
+            <p><small><strong>Note:</strong> Replace MERCHANT_ID with your actual merchant ID when sharing. In production, this would be your public domain.</small></p>
+        </div>
+    </div>
+
+    <script>
+        let rowCounter = 3;
+        const productId = window.location.pathname.split('/').pop();
+
+        function addRow() {
+            const tbody = document.getElementById('sizeTableBody');
+            const newRow = document.createElement('tr');
+            
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="XL" class="size-input"></td>
+                <td><input type="number" placeholder="100" class="chest-input"></td>
+                <td><input type="number" placeholder="90" class="waist-input"></td>
+                <td><input type="number" placeholder="71" class="length-input"></td>
+                <td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>
+            `;
+            
+            tbody.appendChild(newRow);
+            rowCounter++;
+        }
+
+        function removeRow(button) {
+            if (document.getElementById('sizeTableBody').children.length > 1) {
+                button.parentElement.parentElement.remove();
+            } else {
+                alert('You must have at least one size in your chart.');
+            }
+        }
+
+        function collectChartData() {
+            const rows = document.getElementById('sizeTableBody').children;
+            const chartData = [];
+            
+            for (let row of rows) {
+                const size = row.querySelector('.size-input').value;
+                const chest = row.querySelector('.chest-input').value;
+                const waist = row.querySelector('.waist-input').value;
+                const length = row.querySelector('.length-input').value;
+                
+                if (size) {
+                    chartData.push({
+                        size: size,
+                        chest: chest || '',
+                        waist: waist || '',
+                        length: length || ''
+                    });
+                }
+            }
+            
+            return chartData;
+        }
+
+        function saveChart() {
+            const chartData = collectChartData();
+            const unit = document.querySelector('input[name="unit"]:checked').value;
+            
+            if (chartData.length === 0) {
+                alert('Please add at least one size to your chart.');
+                return;
+            }
+            
+            // Check if at least one size has measurements
+            const hasValidData = chartData.some(row => row.chest || row.waist || row.length);
+            if (!hasValidData) {
+                if (!confirm('You haven\'t entered any measurements. Save empty chart anyway?')) {
+                    return;
+                }
+            }
+            
+            const saveBtn = document.querySelector('.btn-green');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '⏳ Saving...';
+            saveBtn.disabled = true;
+            
+            fetch(`/admin/size-chart/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    chart_data: JSON.stringify(chartData),
+                    unit: unit
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('saveMessage');
+                if (data.success) {
+                    messageDiv.className = 'success';
+                    messageDiv.innerHTML = '✅ ' + data.message;
+                    messageDiv.style.display = 'block';
+                    
+                    // Update customer URL with actual data
+                    updateCustomerUrl();
+                } else {
+                    messageDiv.className = 'error';
+                    messageDiv.innerHTML = '❌ Error: ' + (data.error || 'Failed to save');
+                    messageDiv.style.display = 'block';
+                }
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('saveMessage');
+                messageDiv.className = 'error';
+                messageDiv.innerHTML = '❌ Network error occurred';
+                messageDiv.style.display = 'block';
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+
+        function updateCustomerUrl() {
+            // In a real implementation, this would use the actual merchant ID
+            const customerUrl = document.getElementById('customerUrl');
+            customerUrl.textContent = `http://localhost:8082/recommend/MERCHANT_ID/${productId}`;
+        }
+
+        function copyUrl() {
+            const urlText = document.getElementById('customerUrl').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                alert('URL copied to clipboard!');
+            }).catch(err => {
+                // Fallback for older browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = urlText;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('URL copied to clipboard!');
+            });
+        }
+
+        // Initialize page
+        window.onload = function() {
+            updateCustomerUrl();
+        };
+    </script>
+</body>
+</html>

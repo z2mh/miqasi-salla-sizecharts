@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقاسي - إعدادات التطبيق</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            padding: 0;
+            direction: rtl;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .section-header h2 {
+            color: #2d3748;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-content {
+            padding: 25px;
+        }
+        
+        .product-selector {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+        
+        .form-select, .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+        
+        .size-chart-editor {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e0;
+        }
+        
+        .size-chart-editor.active {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .size-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .size-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .size-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .size-table input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .size-table input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .add-size-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .remove-size-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            border-left: 4px solid #10b981;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .product-list {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .product-card.has-chart {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .product-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .chart-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-yes {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-no {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e5e7eb;
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .info-box h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box p {
+            color: #1e3a8a;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <span>📏</span>
+            مقاسي - دليل المقاسات الذكي
+        </h1>
+        <p>أنشئ جداول مقاسات احترافية وقدم توصيات ذكية لعملائك</p>
+    </div>
+
+    <div class="container">
+        <!-- تحميل المنتجات -->
+        <div class="section">
+            <div class="section-header">
+                <h2>
+                    <span>🛍️</span>
+                    منتجاتك
+                </h2>
+            </div>
+            <div class="section-content">
+                <div class="loading" id="productsLoading">
+                    <div class="loading-spinner"></div>
+                    <p>جاري تحميل منتجاتك...</p>
+                </div>
+                
+                <div class="product-list" id="productsList">
+                    <!-- سيتم تحميل المنتجات هنا -->
+                </div>
+            </div>
+        </div>
+
+        <!-- محرر جدول المقاسات -->
+        <div class="size-chart-editor" id="sizeChartEditor">
+            <div class="section">
+                <div class="section-header">
+                    <h2>
+                        <span>📏</span>
+                        إنشاء جدول المقاسات
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label class="form-label">المنتج المحدد:</label>
+                        <p id="selectedProductName" style="font-weight: bold; color: #667eea; font-size: 18px;"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">وحدة القياس:</label>
+                        <select class="form-select" id="measurementUnit" style="width: 200px;">
+                            <option value="cm">سنتيمتر (cm)</option>
+                            <option value="inches">إنش (inches)</option>
+                        </select>
+                    </div>
+
+                    <table class="size-table">
+                        <thead>
+                            <tr>
+                                <th>المقاس</th>
+                                <th>الصدر</th>
+                                <th>الخصر</th>
+                                <th>الطول</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sizeTableBody">
+                            <tr>
+                                <td><input type="text" value="S" class="size-input"></td>
+                                <td><input type="number" placeholder="85" class="chest-input"></td>
+                                <td><input type="number" placeholder="75" class="waist-input"></td>
+                                <td><input type="number" placeholder="65" class="length-input"></td>
+                                <td><button class="remove-size-btn" onclick="removeSize(this)">حذف</button></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" value="M" class="size-input"></td>
+                                <td><input type="number" placeholder="90" class="chest-input"></td>
+                                <td><input type="number" placeholder="80" class="waist-input"></td>
+                                <td><input type="number" placeholder="67" class="length-input"></td>
+                                <td><button class="remove-size-btn" onclick="removeSize(this)">حذف</button></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" value="L" class="size-input"></td>
+                                <td><input type="number" placeholder="95" class="chest-input"></td>
+                                <td><input type="number" placeholder="85" class="waist-input"></td>
+                                <td><input type="number" placeholder="69" class="length-input"></td>
+                                <td><button class="remove-size-btn" onclick="removeSize(this)">حذف</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button class="add-size-btn" onclick="addSize()">+ إضافة مقاس</button>
+
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-success" onclick="saveChart()">
+                            <span>💾</span>
+                            حفظ جدول المقاسات
+                        </button>
+                        <button class="btn btn-secondary" onclick="cancelChart()">
+                            <span>❌</span>
+                            إلغاء
+                        </button>
+                    </div>
+
+                    <div class="success-message" id="successMessage">
+                        <strong>✅ تم الحفظ بنجاح!</strong><br>
+                        سيظهر جدول المقاسات الآن في صفحة المنتج في متجرك.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- معلومات مفيدة -->
+        <div class="info-box">
+            <h3>
+                <span>💡</span>
+                كيفية الاستخدام
+            </h3>
+            <p><strong>1.</strong> اختر المنتج الذي تريد إضافة جدول مقاسات له</p>
+            <p><strong>2.</strong> أدخل قياسات كل مقاس (الصدر، الخصر، الطول)</p>
+            <p><strong>3.</strong> احفظ الجدول وسيظهر تلقائياً في صفحة المنتج</p>
+            <p><strong>4.</strong> سيرى العملاء زر "دليل المقاسات" في صفحة المنتج</p>
+            <p><strong>5.</strong> عند النقر عليه، سيظهر جدول المقاسات + توصية ذكية للمقاس</p>
+        </div>
+    </div>
+
+    <script>
+        let currentProductId = null;
+        let products = [];
+
+        // تحميل المنتجات من Salla
+        async function loadProducts() {
+            document.getElementById('productsLoading').classList.add('show');
+            
+            try {
+                // في التطبيق الحقيقي، سنحصل على المنتجات من Salla API
+                // const response = await fetch('/api/salla/products');
+                // const data = await response.json();
+                
+                // للتجربة، سنستخدم منتجات وهمية
+                setTimeout(() => {
+                    products = [
+                        { id: 1, name: "تيشيرت قطني كلاسيكي", price: "50.00", currency: "SAR", has_chart: false },
+                        { id: 2, name: "بنطلون جينز رجالي", price: "120.00", currency: "SAR", has_chart: false },
+                        { id: 3, name: "هودي شتوي مريح", price: "85.00", currency: "SAR", has_chart: false },
+                        { id: 4, name: "قميص رسمي أنيق", price: "95.00", currency: "SAR", has_chart: false },
+                        { id: 5, name: "جاكيت رياضي", price: "150.00", currency: "SAR", has_chart: false }
+                    ];
+                    
+                    displayProducts();
+                    document.getElementById('productsLoading').classList.remove('show');
+                }, 1500);
+                
+            } catch (error) {
+                console.error('خطأ في تحميل المنتجات:', error);
+                document.getElementById('productsLoading').classList.remove('show');
+            }
+        }
+
+        // عرض المنتجات
+        function displayProducts() {
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = `product-card ${product.has_chart ? 'has-chart' : ''}`;
+                productCard.innerHTML = `
+                    <div class="product-card-header">
+                        <div>
+                            <div class="product-title">${product.name}</div>
+                            <div style="color: #6b7280; font-size: 14px; margin-top: 5px;">
+                                ${product.price} ${product.currency}
+                            </div>
+                        </div>
+                        <div class="chart-status ${product.has_chart ? 'status-yes' : 'status-no'}">
+                            ${product.has_chart ? '✅ يوجد جدول مقاسات' : '⚠️ لا يوجد جدول مقاسات'}
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn" onclick="editProductChart(${product.id}, '${product.name}')">
+                            <span>📏</span>
+                            ${product.has_chart ? 'تعديل جدول المقاسات' : 'إضافة جدول مقاسات'}
+                        </button>
+                        ${product.has_chart ? `
+                            <button class="btn btn-secondary" onclick="previewChart(${product.id})" style="margin-right: 10px;">
+                                <span>👁️</span>
+                                معاينة
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                productsList.appendChild(productCard);
+            });
+        }
+
+        // تعديل جدول مقاسات المنتج
+        function editProductChart(productId, productName) {
+            currentProductId = productId;
+            document.getElementById('selectedProductName').textContent = productName;
+            document.getElementById('sizeChartEditor').classList.add('active');
+            
+            // التمرير إلى محرر الجدول
+            document.getElementById('sizeChartEditor').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+
+            // تحميل البيانات الموجودة إن وجدت
+            loadExistingChart(productId);
+        }
+
+        // تحميل جدول المقاسات الموجود
+        async function loadExistingChart(productId) {
+            try {
+                // سنحمل البيانات من API
+                // const response = await fetch(`/api/size-chart/${productId}`);
+                // const chart = await response.json();
+                
+                // للتجربة، بيانات وهمية
+                console.log('تحميل جدول المقاسات للمنتج:', productId);
+            } catch (error) {
+                console.error('خطأ في تحميل الجدول:', error);
+            }
+        }
+
+        // إضافة مقاس جديد
+        function addSize() {
+            const tbody = document.getElementById('sizeTableBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="XL" class="size-input"></td>
+                <td><input type="number" placeholder="100" class="chest-input"></td>
+                <td><input type="number" placeholder="90" class="waist-input"></td>
+                <td><input type="number" placeholder="71" class="length-input"></td>
+                <td><button class="remove-size-btn" onclick="removeSize(this)">حذف</button></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        // حذف مقاس
+        function removeSize(button) {
+            const rows = document.querySelectorAll('#sizeTableBody tr');
+            if (rows.length > 1) {
+                button.closest('tr').remove();
+            } else {
+                alert('يجب أن يحتوي الجدول على مقاس واحد على الأقل');
+            }
+        }
+
+        // حفظ جدول المقاسات
+        async function saveChart() {
+            if (!currentProductId) return;
+
+            const unit = document.getElementById('measurementUnit').value;
+            const rows = document.querySelectorAll('#sizeTableBody tr');
+            const chartData = [];
+
+            rows.forEach(row => {
+                const size = row.querySelector('.size-input').value;
+                const chest = row.querySelector('.chest-input').value;
+                const waist = row.querySelector('.waist-input').value;
+                const length = row.querySelector('.length-input').value;
+
+                if (size) {
+                    chartData.push({
+                        size: size,
+                        chest: chest || '',
+                        waist: waist || '',
+                        length: length || ''
+                    });
+                }
+            });
+
+            if (chartData.length === 0) {
+                alert('يرجى إضافة مقاس واحد على الأقل');
+                return;
+            }
+
+            try {
+                // حفظ البيانات
+                const response = await fetch('/api/salla/save-chart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_id: currentProductId,
+                        chart_data: chartData,
+                        unit: unit
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // تحديث حالة المنتج
+                    const product = products.find(p => p.id === currentProductId);
+                    if (product) {
+                        product.has_chart = true;
+                    }
+
+                    // إظهار رسالة النجاح
+                    document.getElementById('successMessage').classList.add('show');
+
+                    // تحديث قائمة المنتجات
+                    displayProducts();
+
+                    // إخفاء المحرر بعد 3 ثوان
+                    setTimeout(() => {
+                        cancelChart();
+                    }, 3000);
+                } else {
+                    alert('حدث خطأ في حفظ البيانات');
+                }
+
+            } catch (error) {
+                console.error('خطأ في حفظ الجدول:', error);
+                alert('حدث خطأ في حفظ البيانات');
+            }
+        }
+
+        // إلغاء تعديل الجدول
+        function cancelChart() {
+            document.getElementById('sizeChartEditor').classList.remove('active');
+            document.getElementById('successMessage').classList.remove('show');
+            currentProductId = null;
+        }
+
+        // معاينة جدول المقاسات
+        function previewChart(productId) {
+            const product = products.find(p => p.id === productId);
+            alert(`معاينة جدول المقاسات لـ: ${product.name}\n\nستفتح هنا نافذة معاينة تظهر كيف سيرى العملاء جدول المقاسات`);
+        }
+
+        // تهيئة الصفحة
+        window.onload = function() {
+            loadProducts();
+        };
+    </script>
+</body>
+</html>

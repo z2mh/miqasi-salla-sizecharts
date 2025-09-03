@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📏 Size Chart Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2d3748; color: white; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #cbd5e0; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { color: white; }
+        .white-box { background: white; color: black; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .product-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin: 10px 0; background: #f8f9fa; }
+        .btn { background: #3182ce; color: white; padding: 8px 16px; border: none; border-radius: 4px; text-decoration: none; display: inline-block; margin: 5px; }
+        .btn:hover { background: #2c5aa0; }
+        .btn-green { background: #38a169; }
+        .btn-green:hover { background: #2f855a; }
+        .status { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .status-sale { background: #c6f6d5; color: #22543d; }
+        .status-chart-yes { background: #48bb78; color: white; border: 2px solid #38a169; }
+        .status-chart-no { background: #fed7d7; color: #742a2a; }
+        h1 { color: white; }
+        .info { background: #bee3f8; border-left: 4px solid #3182ce; padding: 15px; margin: 20px 0; border-radius: 4px; color: #2a4365; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">🏠 Home</a>
+            <a href="/admin/products">📏 Size Charts</a>
+            <a href="/admin/widget-integration">📱 Widget Integration</a>
+            <a href="/demo-product" target="_blank">🔍 Demo Product</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+        
+        <h1>📏 Size Chart Management</h1>
+        
+        <div class="white-box">
+            <h2>Your Products</h2>
+            <p>Create and manage size charts for your products. Click "Add Size Chart" to get started.</p>
+            
+            <div class="product-card">
+                <h3>👕 T-Shirt Cotton</h3>
+                <p><strong>Price:</strong> 50.00 SAR | <strong>ID:</strong> 1</p>
+                <span class="status status-sale">✓ For Sale</span>
+                <span class="status status-chart-no" id="chart-status-1">⚠ No Size Chart</span>
+                <br><br>
+                <a href="/admin/size-chart/1" class="btn">📏 Add Size Chart</a>
+            </div>
+            
+            <div class="product-card">
+                <h3>👖 Jeans Pants</h3>
+                <p><strong>Price:</strong> 120.00 SAR | <strong>ID:</strong> 2</p>
+                <span class="status status-sale">✓ For Sale</span>
+                <span class="status status-chart-no" id="chart-status-2">⚠ No Size Chart</span>
+                <br><br>
+                <a href="/admin/size-chart/2" class="btn">📏 Add Size Chart</a>
+            </div>
+            
+            <div class="product-card">
+                <h3>🧥 Hoodie</h3>
+                <p><strong>Price:</strong> 85.00 SAR | <strong>ID:</strong> 3</p>
+                <span class="status status-sale">✓ For Sale</span>
+                <span class="status status-chart-no" id="chart-status-3">⚠ No Size Chart</span>
+                <br><br>
+                <a href="/admin/size-chart/3" class="btn">📏 Add Size Chart</a>
+            </div>
+        </div>
+        
+        <div class="info">
+            <h3>💡 About the Products:</h3>
+            <p><strong>These are mock products for testing.</strong> In production, this will pull real products from your Salla store using the Salla API.</p>
+            <p>Right now we're using sample products so you can test the size chart functionality without API complications.</p>
+        </div>
+        
+        <div class="info">
+            <h3>🎯 How to use:</h3>
+            <p>1. <strong>Click "📏 Add Size Chart"</strong> on any product above</p>
+            <p>2. <strong>Create size measurements</strong> (S, M, L, XL with chest, waist, length)</p>
+            <p>3. <strong>Get customer URL</strong> for size recommendations</p>
+            <p>4. <strong>Share URL with customers</strong> - they enter height/weight and get size recommendations</p>
+        </div>
+    </div>
+
+    <script>
+        // Check chart status for all products
+        async function checkChartStatus() {
+            try {
+                console.log('🔍 Checking chart status...');
+                const response = await fetch('/api/chart-status');
+                const chartData = await response.json();
+                console.log('📊 Received chart data:', chartData);
+                
+                // Update status for each product
+                [1, 2, 3].forEach(productId => {
+                    const statusElement = document.getElementById(`chart-status-${productId}`);
+                    const hasChart = chartData[productId] || false;
+                    console.log(`📊 Product ${productId}: hasChart = ${hasChart}`);
+                    console.log(`📊 Status element for product ${productId}:`, statusElement);
+                    
+                    if (statusElement) {
+                        const oldClass = statusElement.className;
+                        const oldText = statusElement.textContent;
+                        
+                        if (hasChart) {
+                            statusElement.className = 'status status-chart-yes';
+                            statusElement.textContent = '✓ Has Size Chart';
+                            console.log(`✅ Product ${productId}: Changed from "${oldClass}" to "${statusElement.className}"`);
+                            console.log(`✅ Product ${productId}: Changed from "${oldText}" to "${statusElement.textContent}"`);
+                        } else {
+                            statusElement.className = 'status status-chart-no';
+                            statusElement.textContent = '⚠ No Size Chart';
+                            console.log(`❌ Product ${productId}: Changed from "${oldClass}" to "${statusElement.className}"`);
+                            console.log(`❌ Product ${productId}: Changed from "${oldText}" to "${statusElement.textContent}"`);
+                        }
+                    } else {
+                        console.error(`❌ Could not find status element for product ${productId}`);
+                    }
+                });
+            } catch (error) {
+                console.error('❌ Error checking chart status:', error);
+            }
+        }
+
+        // Check status when page loads
+        window.addEventListener('load', checkChartStatus);
+        
+        // Check status every 5 seconds to see updates
+        setInterval(checkChartStatus, 5000);
+    </script>
+</body>
+</html>

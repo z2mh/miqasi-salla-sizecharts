@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📱 Widget Integration Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2d3748; color: white; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #cbd5e0; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { color: white; }
+        .white-box { background: white; color: black; border-radius: 8px; padding: 24px; margin: 20px 0; }
+        .code-block { background: #1a202c; color: #e2e8f0; padding: 16px; border-radius: 6px; font-family: 'Courier New', monospace; overflow-x: auto; margin: 16px 0; }
+        .step { background: #f7fafc; border-left: 4px solid #48bb78; padding: 16px; margin: 16px 0; border-radius: 0 6px 6px 0; }
+        .warning { background: #fed7d7; border-left: 4px solid #e53e3e; padding: 16px; margin: 16px 0; border-radius: 0 6px 6px 0; color: #742a2a; }
+        .success { background: #c6f6d5; border-left: 4px solid #38a169; padding: 16px; margin: 16px 0; border-radius: 0 6px 6px 0; color: #22543d; }
+        h1 { color: white; }
+        h2, h3 { color: #2d3748; }
+        .btn { background: #48bb78; color: white; padding: 12px 20px; border: none; border-radius: 6px; text-decoration: none; display: inline-block; margin: 8px 8px 8px 0; font-weight: bold; }
+        .btn:hover { background: #38a169; }
+        .demo-widget { border: 2px dashed #cbd5e0; padding: 20px; text-align: center; border-radius: 8px; margin: 16px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">🏠 Home</a>
+            <a href="/admin/products">📏 Size Charts</a>
+            <a href="/admin/widget-integration">📱 Widget Integration</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+        
+        <h1>📱 Miqasi Size Guide Widget Integration</h1>
+        
+        <div class="white-box">
+            <h2>🎯 Overview</h2>
+            <p>The Miqasi Size Guide Widget automatically adds a <strong>"📏 Size Guide"</strong> button to your product pages. When customers click it, they see a beautiful popup with:</p>
+            <ul>
+                <li><strong>📏 Size Chart Tab:</strong> Visual table showing measurements for all sizes</li>
+                <li><strong>🎯 Size Recommendation Tab:</strong> Smart recommendations based on height/weight</li>
+            </ul>
+            
+            <div class="demo-widget">
+                <p><strong>Demo Widget Preview:</strong></p>
+                <button style="background: #48bb78; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: bold;">
+                    📏 دليل المقاسات
+                </button>
+            </div>
+        </div>
+
+        <div class="white-box">
+            <h2>🚀 Quick Setup (3 Steps)</h2>
+            
+            <div class="step">
+                <h3>Step 1: Add Widget Script to Your Store</h3>
+                <p>Add this script tag to your theme's layout file (before closing &lt;/body&gt; tag):</p>
+                <div class="code-block">
+&lt;script src="https://your-domain.com/size-guide-widget.js"&gt;&lt;/script&gt;
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Step 2: Add Configuration to Product Pages</h3>
+                <p>Add this invisible div to your product page template:</p>
+                <div class="code-block">
+&lt;div 
+    data-miqasi-merchant-id="{{ merchant_id }}" 
+    data-miqasi-product-id="{{ product.id }}" 
+    data-miqasi-api-url="https://your-domain.com"
+    data-miqasi-language="ar"
+    style="display: none;"&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+
+            <div class="step">
+                <h3>Step 3: Test the Integration</h3>
+                <p>The widget automatically detects if a size chart exists and shows the button only for products with charts.</p>
+                <a href="/demo-product" class="btn" target="_blank">🔍 View Demo Product Page</a>
+            </div>
+        </div>
+
+        <div class="white-box">
+            <h2>🛠️ Advanced Configuration Options</h2>
+            
+            <h3>JavaScript Initialization (Alternative Method)</h3>
+            <p>For more control, you can initialize the widget manually:</p>
+            <div class="code-block">
+&lt;script&gt;
+new MiqasiSizeGuide({
+    merchantId: 'YOUR_MERCHANT_ID',
+    productId: 'PRODUCT_ID',
+    apiUrl: 'https://your-domain.com',
+    language: 'ar', // or 'en'
+    buttonText: {
+        ar: '📏 دليل المقاسات',
+        en: '📏 Size Guide'
+    }
+});
+&lt;/script&gt;
+            </div>
+
+            <h3>Customization Options</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+                <tr style="background: #f7fafc;">
+                    <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Option</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Description</th>
+                    <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Default</th>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;"><code>merchantId</code></td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Your Salla merchant ID</td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Required</td>
+                </tr>
+                <tr style="background: #f7fafc;">
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;"><code>productId</code></td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Product ID for the size chart</td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Required</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;"><code>language</code></td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Interface language (ar/en)</td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">ar</td>
+                </tr>
+                <tr style="background: #f7fafc;">
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;"><code>apiUrl</code></td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">Your API server URL</td>
+                    <td style="padding: 12px; border: 1px solid #e2e8f0;">localhost:8082</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="white-box">
+            <h2>🎨 For Salla Theme Developers</h2>
+            
+            <h3>Salla Twilight Integration</h3>
+            <p>For Salla themes using Twilight, you can integrate using Salla components:</p>
+            <div class="code-block">
+&lt;!-- Add to product page template --&gt;
+&lt;salla-button id="size-guide-trigger"&gt;
+    📏 {{ trans('Size Guide') }}
+&lt;/salla-button&gt;
+
+&lt;salla-modal id="size-guide-modal" width="large"&gt;
+    &lt;!-- Size guide content will be loaded here --&gt;
+&lt;/salla-modal&gt;
+
+&lt;script&gt;
+// Initialize with Salla data
+new MiqasiSizeGuide({
+    merchantId: '{{ store.id }}',
+    productId: '{{ product.id }}',
+    apiUrl: '{{ app.api_url }}',
+    language: '{{ app.current_locale }}'
+});
+&lt;/script&gt;
+            </div>
+
+            <h3>Theme Template Variables</h3>
+            <p>Use these Salla template variables in your integration:</p>
+            <ul>
+                <li><code>{{ store.id }}</code> - Merchant ID</li>
+                <li><code>{{ product.id }}</code> - Product ID</li>
+                <li><code>{{ app.current_locale }}</code> - Current language (ar/en)</li>
+                <li><code>{{ app.api_url }}</code> - Your app's API URL</li>
+            </ul>
+        </div>
+
+        <div class="white-box">
+            <h2>📱 Mobile Optimization</h2>
+            <p>The widget is fully responsive and optimized for mobile devices:</p>
+            <ul>
+                <li><strong>Touch-friendly:</strong> Large buttons and easy-to-use interface</li>
+                <li><strong>Responsive design:</strong> Adapts to all screen sizes</li>
+                <li><strong>Fast loading:</strong> Lightweight and optimized for performance</li>
+                <li><strong>Accessibility:</strong> Keyboard navigation and screen reader support</li>
+            </ul>
+        </div>
+
+        <div class="white-box">
+            <h2>🔧 Testing & Debugging</h2>
+            
+            <div class="success">
+                <h3>✅ Test Your Integration</h3>
+                <p>Use our demo product page to see how the widget works:</p>
+                <a href="/demo-product" class="btn" target="_blank">🔍 Open Demo Product Page</a>
+            </div>
+
+            <h3>Troubleshooting</h3>
+            <div class="warning">
+                <h4>Widget not showing?</h4>
+                <ul>
+                    <li>Check that the product has a size chart with measurements</li>
+                    <li>Verify merchant_id and product_id are correct</li>
+                    <li>Check browser console for JavaScript errors</li>
+                    <li>Ensure the API URL is accessible</li>
+                </ul>
+            </div>
+
+            <h3>Debug Mode</h3>
+            <p>Add <code>debug: true</code> to see console logs:</p>
+            <div class="code-block">
+new MiqasiSizeGuide({
+    merchantId: 'YOUR_MERCHANT_ID',
+    productId: 'PRODUCT_ID',
+    debug: true  // Shows detailed logs
+});
+            </div>
+        </div>
+
+        <div class="white-box">
+            <h2>📞 Support & Documentation</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <h4>🔗 Quick Links</h4>
+                    <ul>
+                        <li><a href="/admin/products">Manage Size Charts</a></li>
+                        <li><a href="/demo-product">Demo Product Page</a></li>
+                        <li><a href="/health">API Health Check</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>📊 API Endpoints</h4>
+                    <ul>
+                        <li><code>GET /api/chart-exists/:merchant/:product</code></li>
+                        <li><code>POST /api/recommend</code></li>
+                        <li><code>GET /size-guide-widget.js</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

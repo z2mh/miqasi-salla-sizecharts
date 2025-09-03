@@ -1,0 +1,392 @@
+{
+  "app": {
+    "name": "Miqasi - Size Charts & Smart Recommendations",
+    "description": {
+      "ar": "تطبيق ذكي لإنشاء جداول المقاسات وتقديم توصيات المقاسات للعملاء بناءً على الطول والوزن",
+      "en": "Smart app for creating size charts and providing size recommendations to customers based on height and weight"
+    },
+    "icon": "📏",
+    "version": "1.0.0",
+    "webhook_url": "{app_url}/webhook",
+    "settings_url": "{app_url}/admin/products"
+  },
+  "permissions": {
+    "scopes": [
+      "products.read",
+      "products.write",
+      "store.read"
+    ]
+  },
+  "settings": {
+    "fields": [
+      {
+        "type": "header",
+        "content": {
+          "ar": "🎯 إعدادات تطبيق مقاسي",
+          "en": "🎯 Miqasi App Settings"
+        }
+      },
+      {
+        "type": "boolean",
+        "name": "widget_enabled",
+        "label": {
+          "ar": "تفعيل أداة دليل المقاسات",
+          "en": "Enable Size Guide Widget"
+        },
+        "description": {
+          "ar": "عرض زر 'دليل المقاسات' في صفحات المنتجات",
+          "en": "Show 'Size Guide' button on product pages"
+        },
+        "default": true
+      },
+      {
+        "type": "select",
+        "name": "button_position",
+        "label": {
+          "ar": "موضع زر دليل المقاسات",
+          "en": "Size Guide Button Position"
+        },
+        "description": {
+          "ar": "اختر مكان ظهور زر دليل المقاسات في صفحة المنتج",
+          "en": "Choose where to display the size guide button on product page"
+        },
+        "options": [
+          {
+            "value": "after_price",
+            "label": {
+              "ar": "بعد السعر",
+              "en": "After Price"
+            }
+          },
+          {
+            "value": "before_add_to_cart",
+            "label": {
+              "ar": "قبل زر الإضافة للسلة",
+              "en": "Before Add to Cart Button"
+            }
+          },
+          {
+            "value": "after_add_to_cart",
+            "label": {
+              "ar": "بعد زر الإضافة للسلة",
+              "en": "After Add to Cart Button"
+            }
+          }
+        ],
+        "default": "before_add_to_cart"
+      },
+      {
+        "type": "text",
+        "name": "button_text_ar",
+        "label": {
+          "ar": "نص الزر بالعربية",
+          "en": "Button Text in Arabic"
+        },
+        "placeholder": {
+          "ar": "📏 دليل المقاسات",
+          "en": "📏 دليل المقاسات"
+        },
+        "default": "📏 دليل المقاسات"
+      },
+      {
+        "type": "text",
+        "name": "button_text_en",
+        "label": {
+          "ar": "نص الزر بالإنجليزية",
+          "en": "Button Text in English"
+        },
+        "placeholder": {
+          "ar": "📏 Size Guide",
+          "en": "📏 Size Guide"
+        },
+        "default": "📏 Size Guide"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "header",
+        "content": {
+          "ar": "🎨 إعدادات التصميم",
+          "en": "🎨 Design Settings"
+        }
+      },
+      {
+        "type": "color",
+        "name": "button_color",
+        "label": {
+          "ar": "لون زر دليل المقاسات",
+          "en": "Size Guide Button Color"
+        },
+        "description": {
+          "ar": "اختر لون زر دليل المقاسات ليتناسب مع تصميم متجرك",
+          "en": "Choose the size guide button color to match your store design"
+        },
+        "default": "#667eea"
+      },
+      {
+        "type": "select",
+        "name": "button_style",
+        "label": {
+          "ar": "نمط الزر",
+          "en": "Button Style"
+        },
+        "options": [
+          {
+            "value": "gradient",
+            "label": {
+              "ar": "متدرج",
+              "en": "Gradient"
+            }
+          },
+          {
+            "value": "solid",
+            "label": {
+              "ar": "لون موحد",
+              "en": "Solid Color"
+            }
+          },
+          {
+            "value": "outline",
+            "label": {
+              "ar": "إطار",
+              "en": "Outline"
+            }
+          }
+        ],
+        "default": "gradient"
+      },
+      {
+        "type": "select",
+        "name": "modal_theme",
+        "label": {
+          "ar": "موضوع النافذة المنبثقة",
+          "en": "Modal Theme"
+        },
+        "options": [
+          {
+            "value": "modern",
+            "label": {
+              "ar": "عصري",
+              "en": "Modern"
+            }
+          },
+          {
+            "value": "classic",
+            "label": {
+              "ar": "كلاسيكي",
+              "en": "Classic"
+            }
+          },
+          {
+            "value": "minimal",
+            "label": {
+              "ar": "بسيط",
+              "en": "Minimal"
+            }
+          }
+        ],
+        "default": "modern"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "header",
+        "content": {
+          "ar": "🤖 إعدادات التوصيات الذكية",
+          "en": "🤖 Smart Recommendations Settings"
+        }
+      },
+      {
+        "type": "boolean",
+        "name": "recommendations_enabled",
+        "label": {
+          "ar": "تفعيل التوصيات الذكية",
+          "en": "Enable Smart Recommendations"
+        },
+        "description": {
+          "ar": "السماح للعملاء بالحصول على توصيات المقاسات بناءً على الطول والوزن",
+          "en": "Allow customers to get size recommendations based on height and weight"
+        },
+        "default": true
+      },
+      {
+        "type": "select",
+        "name": "measurement_system",
+        "label": {
+          "ar": "نظام القياس الافتراضي",
+          "en": "Default Measurement System"
+        },
+        "options": [
+          {
+            "value": "metric",
+            "label": {
+              "ar": "متري (سم، كيلو)",
+              "en": "Metric (cm, kg)"
+            }
+          },
+          {
+            "value": "imperial",
+            "label": {
+              "ar": "إمبراطوري (إنش، باوند)",
+              "en": "Imperial (inches, lbs)"
+            }
+          }
+        ],
+        "default": "metric"
+      },
+      {
+        "type": "boolean",
+        "name": "show_confidence_score",
+        "label": {
+          "ar": "عرض نسبة الثقة في التوصية",
+          "en": "Show Confidence Score in Recommendation"
+        },
+        "description": {
+          "ar": "عرض نسبة دقة التوصية للعملاء",
+          "en": "Display recommendation accuracy percentage to customers"
+        },
+        "default": true
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "header",
+        "content": {
+          "ar": "📊 إعدادات التحليلات",
+          "en": "📊 Analytics Settings"
+        }
+      },
+      {
+        "type": "boolean",
+        "name": "analytics_enabled",
+        "label": {
+          "ar": "تفعيل تتبع الاستخدام",
+          "en": "Enable Usage Analytics"
+        },
+        "description": {
+          "ar": "تتبع استخدام العملاء لأداة دليل المقاسات لتحسين الخدمة",
+          "en": "Track customer usage of size guide for service improvement"
+        },
+        "default": true
+      },
+      {
+        "type": "boolean",
+        "name": "recommendation_tracking",
+        "label": {
+          "ar": "تتبع دقة التوصيات",
+          "en": "Track Recommendation Accuracy"
+        },
+        "description": {
+          "ar": "تتبع مدى دقة التوصيات لتحسين الخوارزمية",
+          "en": "Track recommendation accuracy to improve algorithm"
+        },
+        "default": true
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "header",
+        "content": {
+          "ar": "🔧 إعدادات متقدمة",
+          "en": "🔧 Advanced Settings"
+        }
+      },
+      {
+        "type": "boolean",
+        "name": "debug_mode",
+        "label": {
+          "ar": "تفعيل وضع التطوير",
+          "en": "Enable Debug Mode"
+        },
+        "description": {
+          "ar": "عرض معلومات إضافية في وحدة تحكم المتصفح للمطورين",
+          "en": "Show additional information in browser console for developers"
+        },
+        "default": false
+      },
+      {
+        "type": "text",
+        "name": "custom_css",
+        "label": {
+          "ar": "CSS مخصص",
+          "en": "Custom CSS"
+        },
+        "description": {
+          "ar": "إضافة تنسيقات CSS مخصصة لأداة دليل المقاسات",
+          "en": "Add custom CSS styling for the size guide widget"
+        },
+        "placeholder": {
+          "ar": ".miqasi-salla-modal { /* CSS مخصص هنا */ }",
+          "en": ".miqasi-salla-modal { /* Custom CSS here */ }"
+        },
+        "multiline": true
+      },
+      {
+        "type": "text",
+        "name": "webhook_secret",
+        "label": {
+          "ar": "مفتاح الآمان",
+          "en": "Webhook Secret"
+        },
+        "description": {
+          "ar": "مفتاح سري لحماية اتصال التطبيق مع متجرك",
+          "en": "Secret key to secure app connection with your store"
+        },
+        "readonly": true,
+        "generate": "random_string"
+      },
+      {
+        "type": "info",
+        "content": {
+          "ar": "💡 بعد حفظ الإعدادات، قد تحتاج لتحديث صفحة المتجر لرؤية التغييرات",
+          "en": "💡 After saving settings, you may need to refresh your store page to see changes"
+        }
+      }
+    ]
+  },
+  "installation": {
+    "hooks": {
+      "after_install": {
+        "webhook": "{app_url}/hooks/after-install",
+        "description": "Initialize app settings and create default size charts"
+      },
+      "after_uninstall": {
+        "webhook": "{app_url}/hooks/after-uninstall", 
+        "description": "Clean up app data and remove widgets"
+      }
+    }
+  },
+  "theme_integration": {
+    "auto_inject": true,
+    "script_url": "{app_url}/salla-widget.js",
+    "inject_locations": [
+      {
+        "page": "product",
+        "position": "before_add_to_cart",
+        "condition": "app_settings.widget_enabled === true"
+      }
+    ],
+    "css_url": "{app_url}/salla-widget.css"
+  },
+  "api_endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/chart-exists/{merchant_id}/{product_id}",
+      "description": "Check if size chart exists for product"
+    },
+    {
+      "method": "POST", 
+      "path": "/api/recommend",
+      "description": "Get size recommendation based on measurements"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/products",
+      "description": "Admin dashboard for managing size charts"
+    }
+  ]
+}

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توصية المقاس - Miqasi Size Charts</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .form-section {
+            padding: 40px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 1.1em;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.2);
+            outline: none;
+        }
+        
+        .measurement-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 3px solid #4CAF50;
+            display: none;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .recommended-size {
+            font-size: 3em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+        
+        .confidence {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .size-chart {
+            margin-top: 30px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .size-chart h3 {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .size-chart table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .size-chart th, .size-chart td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .size-chart th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+        
+        .size-chart .recommended-row {
+            background: #e8f5e8;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h4 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .measurement-inputs {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .form-section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📏 توصية المقاس الذكي</h1>
+            <p>احصل على المقاس المثالي بناءً على قياساتك</p>
+        </div>
+        
+        <div class="form-section">
+            <form id="recommendation-form">
+                <div class="measurement-inputs">
+                    <div class="input-group">
+                        <label for="height">الطول (سم) *</label>
+                        <input type="number" id="height" required min="100" max="250" placeholder="170">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="weight">الوزن (كغ) *</label>
+                        <input type="number" id="weight" required min="30" max="200" placeholder="70">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="fit-preference">تفضيل القصة</label>
+                    <select id="fit-preference">
+                        <option value="regular">عادي</option>
+                        <option value="tight">ضيق</option>
+                        <option value="loose">فضفاض</option>
+                    </select>
+                </div>
+                
+                <div class="info-box">
+                    <h4>💡 كيف يعمل؟</h4>
+                    <p>نقوم بحساب قياسات الصدر والخصر المتوقعة بناءً على طولك ووزنك، ثم نقارنها مع جدول المقاسات لنعطيك أفضل توصية.</p>
+                </div>
+                
+                <button type="submit" class="btn" id="recommend-btn">
+                    🎯 احصل على توصية المقاس
+                </button>
+            </form>
+        </div>
+        
+        <div class="result-section" id="result-section">
+            <div class="loading" id="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>جاري حساب المقاس المناسب لك...</p>
+            </div>
+            
+            <div class="result-card" id="result-card" style="display: none;">
+                <h2>المقاس الموصى به</h2>
+                <div class="recommended-size" id="recommended-size"></div>
+                <div class="confidence" id="confidence"></div>
+                <p id="explanation"></p>
+                
+                <div id="estimated-measurements" style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 10px;">
+                    <h4>القياسات المتوقعة:</h4>
+                    <p id="measurements-text"></p>
+                </div>
+            </div>
+            
+            <div class="error" id="error-message" style="display: none;"></div>
+        </div>
+        
+        <div class="size-chart">
+            <h3>جدول المقاسات الكامل</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المقاس</th>
+                        {% for row in chart.rows %}
+                        {% if loop.first %}
+                        {% for key, value in row %}
+                        {% if key !== 'size' %}
+                        <th>{{ key|title }} ({{ chart.unit }})</th>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="size-chart-body">
+                    {% for row in chart.rows %}
+                    <tr data-size="{{ row.size }}">
+                        <td><strong>{{ row.size }}</strong></td>
+                        {% for key, value in row %}
+                        {% if key !== 'size' %}
+                        <td>{{ value }}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('recommendation-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const height = document.getElementById('height').value;
+            const weight = document.getElementById('weight').value;
+            const fitPreference = document.getElementById('fit-preference').value;
+            
+            if (!height || !weight) {
+                alert('يرجى إدخال الطول والوزن');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('result-section').style.display = 'block';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result-card').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('recommend-btn').disabled = true;
+            
+            try {
+                const response = await fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        merchant_id: '{{ merchant_id }}',
+                        product_id: '{{ product_id }}',
+                        height: parseFloat(height),
+                        weight: parseFloat(weight),
+                        fit_preference: fitPreference
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Hide loading, show result
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('result-card').style.display = 'block';
+                    
+                    // Update result
+                    document.getElementById('recommended-size').textContent = data.recommendation.recommended_size;
+                    document.getElementById('confidence').textContent = `${data.recommendation.confidence}% دقة`;
+                    document.getElementById('explanation').textContent = data.recommendation.explanation;
+                    
+                    // Show estimated measurements
+                    const measurements = data.recommendation.estimated_measurements;
+                    document.getElementById('measurements-text').innerHTML = 
+                        `الصدر المتوقع: <strong>${measurements.chest} سم</strong> | الخصر المتوقع: <strong>${measurements.waist} سم</strong>`;
+                    
+                    // Highlight recommended size in table
+                    document.querySelectorAll('#size-chart-body tr').forEach(row => {
+                        row.classList.remove('recommended-row');
+                    });
+                    
+                    const recommendedRow = document.querySelector(`[data-size="${data.recommendation.recommended_size}"]`);
+                    if (recommendedRow) {
+                        recommendedRow.classList.add('recommended-row');
+                        recommendedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    throw new Error(data.error || 'حدث خطأ في حساب التوصية');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').textContent = '❌ ' + error.message;
+            } finally {
+                document.getElementById('recommend-btn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
