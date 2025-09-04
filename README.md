@@ -2,18 +2,15 @@
 
 <br />
 <div align="center"> 
-  <a href="https://salla.dev"> 
-    <img src="https://salla.dev/wp-content/uploads/2023/03/1-Light.png" alt="Logo"> 
-  </a>
-  <h1 align="center">Salla Apps Starter Kit</h1>
+  <h1 align="center">📏 Miqasi - Size Charts for Salla</h1>
   <p align="center">
-    An awesome starter template to create your Salla Apps today!
+    Complete Salla Partners App for intelligent size chart management and recommendations
     <br />
-    <a href="https://salla.dev/"><strong>Explore our blogs »</strong></a>
+    <a href="https://app.trynashr.com"><strong>Visit Live App »</strong></a>
     <br />
     <br />
     <a href="https://github.com/SallaApp/express-starter-kit/issues/new">Report Bug</a> · 
-    <a href="https://github.com/SallaApp/express-starter-kit/discussions/new">Request Feature</a> . <a href="https://t.me/salladev">&lt;/Salla Developers&gt;</a>
+    <a href="https://github.com/SallaApp/express-starter-kit/discussions/new">Request Feature</a>
   </p>
 </div>
 
@@ -74,14 +71,26 @@
 
 <!-- Overview -->
 
-## Overview
+## 🚀 Features
 
-This is a starter App to create ExpressJS application equipped with the required auth processes and webhooks/actions that help you to create your Salla App which works with the [Salla APIs](https://docs.salla.dev/). Your App later can be published to the [Salla App Store](https://apps.salla.sa/) and be available for installation to any of Salla [Merchants Stores](https://s.salla.sa/).
+- **🔐 Salla OAuth Integration** - Secure authentication with Salla Partners
+- **📊 Product Management** - Select products and create size charts
+- **📏 Smart Size Editor** - Interactive table editor with real-time preview  
+- **🤖 AI Recommendations** - Intelligent size suggestions based on measurements
+- **🎨 Theme Integration** - Works with all Salla themes automatically
+- **📱 Mobile Responsive** - Full support for mobile devices
+- **🌐 Arabic Interface** - Native RTL support
 
-What can you use this starter App for?
+## 🎯 User Flow
 
-- Create a Salla App from scratch, e.g. chatbot app or shipping service app, or any amazing app from your idea.
-- Modify/Customize any of your previous Apps in order to take the advantages given by this starter App.
+1. **Login** - Store owner clicks "Login with Salla"
+2. **OAuth** - Redirected to Salla for authorization  
+3. **Dashboard** - Access product management interface
+4. **Product Selection** - Choose product from dropdown
+5. **Size Chart Creation** - Add sizes with measurements
+6. **Save** - Chart is stored and synced with store theme
+7. **Customer Experience** - Size guide appears on product pages
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
