@@ -7,7 +7,7 @@ export default async function handler(req, res) {
       
       if (!code) {
         // Redirect to Salla OAuth
-        const salla_client_id = process.env.SALLA_CLIENT_ID || 'your_salla_client_id';
+        const salla_client_id = process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4';
         const redirect_uri = 'https://app.trynashr.com/api/auth';
         const scope = 'read:products,read:stores';
         
@@ -24,8 +24,8 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           grant_type: 'authorization_code',
-          client_id: process.env.SALLA_CLIENT_ID,
-          client_secret: process.env.SALLA_CLIENT_SECRET,
+          client_id: process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4',
+          client_secret: process.env.SALLA_OAUTH_CLIENT_SECRET || '1c2f53b28aea459463d2c91a69721449',
           code: code,
           redirect_uri: 'https://app.trynashr.com/api/auth'
         })
