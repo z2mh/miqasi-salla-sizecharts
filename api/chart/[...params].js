@@ -1,8 +1,7 @@
 // Get size chart API endpoint with dynamic routing
 // Handles requests like /api/chart/store123/product456
 
-// In-memory storage for demo purposes (shared with save-chart.js)
-const sizeCharts = new Map();
+import { getChart } from '../../lib/storage.js';
 
 export default async function handler(req, res) {
   try {
@@ -20,10 +19,9 @@ export default async function handler(req, res) {
     }
     
     const [store_id, product_id] = params;
-    const chartKey = `${store_id}:${product_id}`;
     
-    // Get chart data
-    const chartData = sizeCharts.get(chartKey);
+    // Get chart data using shared storage
+    const chartData = getChart(store_id, product_id);
     
     if (!chartData) {
       return res.status(404).json({ 

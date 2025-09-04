@@ -1,6 +1,5 @@
 // Save size chart API endpoint
-// In-memory storage for demo purposes
-const sizeCharts = new Map();
+import { saveChart } from '../lib/storage.js';
 
 export default async function handler(req, res) {
   try {
@@ -16,27 +15,13 @@ export default async function handler(req, res) {
       });
     }
     
-    // Create unique key for the chart
-    const chartKey = `${store_id}:${product_id}`;
-    
-    // Save chart data
-    const chartEntry = {
-      store_id,
-      product_id,
-      sizes: chart_data,
-      unit: unit || 'cm',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    sizeCharts.set(chartKey, chartEntry);
-    
-    console.log(`Saved size chart for store ${store_id}, product ${product_id}:`, chartEntry);
+    // Save chart data using shared storage
+    const chartEntry = saveChart(store_id, product_id, chart_data, unit);
     
     res.status(200).json({
       success: true,
       message: 'Size chart saved successfully',
-      chart_id: chartKey,
+      chart_id: `${store_id}:${product_id}`,
       data: chartEntry
     });
     

@@ -303,17 +303,40 @@ export default function handler(req, res) {
             }
         }
         
-        function handleProductSelect(event) {
+        async function handleProductSelect(event) {
             const productId = event.target.value;
             const editor = document.getElementById('chart-editor');
             
             if (productId) {
                 currentProduct = productId;
                 sizeData = {};
+                
+                // Try to load existing size chart for this product
+                await loadExistingSizeChart(productId);
+                
                 updateSizesTable();
                 editor.style.display = 'block';
             } else {
                 editor.style.display = 'none';
+            }
+        }
+        
+        async function loadExistingSizeChart(productId) {
+            try {
+                const response = await fetch(\`\${API_BASE}/api/get-chart?store_id=\${STORE_ID}&product_id=\${productId}\`);
+                const data = await response.json();
+                
+                if (data.success && data.data.sizes) {
+                    sizeData = data.data.sizes;
+                    showMessage(\`📊 تم تحميل جدول المقاسات الموجود (\${Object.keys(sizeData).length} مقاسات)\`, 'success');
+                } else {
+                    sizeData = {};
+                    showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
+                }
+            } catch (error) {
+                console.log('No existing chart found or error loading:', error);
+                sizeData = {};
+                showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
             }
         }
         
