@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.js",
+      "src": "api/*.js",
       "use": "@vercel/node"
     },
     {
@@ -12,12 +12,25 @@
   ],
   "routes": [
     {
-      "src": "/public/(.*)",
-      "dest": "/public/$1"
+      "src": "/dashboard",
+      "dest": "/api/dashboard.js"
+    },
+    {
+      "src": "/widget.js",
+      "dest": "/public/store-widget.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.js"
+      "dest": "/api/dashboard.js"
     }
-  ]
+  ],
+  "functions": {
+    "api/*.js": {
+      "runtime": "@vercel/node@18"
+    }
+  }
 }
