@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miqasi Dashboard - Size Charts Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .product-selector {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .size-chart-editor {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .size-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .size-table th,
+        .size-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .size-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .size-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .charts-list {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 25px;
+        }
+        
+        .chart-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .chart-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .chart-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📏 Miqasi Dashboard</h1>
+            <p>Create intelligent size charts for your products</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Product Selector -->
+            <div class="product-selector">
+                <h2>Select Product</h2>
+                <div class="form-group">
+                    <label for="productSelect">Choose a product to create size chart:</label>
+                    <select id="productSelect" class="form-control">
+                        <option value="">Loading products...</option>
+                    </select>
+                </div>
+                <button id="createChartBtn" class="btn" disabled>Create Size Chart</button>
+            </div>
+            
+            <!-- Size Chart Editor -->
+            <div id="chartEditor" class="size-chart-editor hidden">
+                <h2>Size Chart Editor</h2>
+                <p id="selectedProduct" class="mb-3"></p>
+                
+                <table class="size-table">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Chest (cm)</th>
+                            <th>Waist (cm)</th>
+                            <th>Length (cm)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sizeTableBody">
+                        <tr data-size="XS">
+                            <td><strong>XS</strong></td>
+                            <td><input type="number" name="chest_xs" placeholder="85"></td>
+                            <td><input type="number" name="waist_xs" placeholder="70"></td>
+                            <td><input type="number" name="length_xs" placeholder="65"></td>
+                        </tr>
+                        <tr data-size="S">
+                            <td><strong>S</strong></td>
+                            <td><input type="number" name="chest_s" placeholder="90"></td>
+                            <td><input type="number" name="waist_s" placeholder="75"></td>
+                            <td><input type="number" name="length_s" placeholder="67"></td>
+                        </tr>
+                        <tr data-size="M">
+                            <td><strong>M</strong></td>
+                            <td><input type="number" name="chest_m" placeholder="95"></td>
+                            <td><input type="number" name="waist_m" placeholder="80"></td>
+                            <td><input type="number" name="length_m" placeholder="69"></td>
+                        </tr>
+                        <tr data-size="L">
+                            <td><strong>L</strong></td>
+                            <td><input type="number" name="chest_l" placeholder="100"></td>
+                            <td><input type="number" name="waist_l" placeholder="85"></td>
+                            <td><input type="number" name="length_l" placeholder="71"></td>
+                        </tr>
+                        <tr data-size="XL">
+                            <td><strong>XL</strong></td>
+                            <td><input type="number" name="chest_xl" placeholder="105"></td>
+                            <td><input type="number" name="waist_xl" placeholder="90"></td>
+                            <td><input type="number" name="length_xl" placeholder="73"></td>
+                        </tr>
+                        <tr data-size="XXL">
+                            <td><strong>XXL</strong></td>
+                            <td><input type="number" name="chest_xxl" placeholder="110"></td>
+                            <td><input type="number" name="waist_xxl" placeholder="95"></td>
+                            <td><input type="number" name="length_xxl" placeholder="75"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; display: flex; gap: 15px;">
+                    <button id="saveChartBtn" class="btn">💾 Save Size Chart</button>
+                    <button id="cancelBtn" class="btn btn-secondary">❌ Cancel</button>
+                </div>
+            </div>
+            
+            <!-- Existing Charts List -->
+            <div class="charts-list">
+                <h2>📋 Your Size Charts</h2>
+                <div id="chartsList">
+                    <div class="loading">Loading your size charts...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get store info from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const storeId = urlParams.get('store_id') || 'demo';
+        
+        // Mock data for development
+        const mockProducts = [
+            { id: 1, name: "تيشيرت قطني كلاسيكي", price: "75.00", url: "https://store.salla.sa/product/1" },
+            { id: 2, name: "بنطلون جينز أزرق", price: "120.00", url: "https://store.salla.sa/product/2" },
+            { id: 3, name: "فستان صيفي أنيق", price: "95.00", url: "https://store.salla.sa/product/3" },
+            { id: 4, name: "جاكيت شتوي", price: "180.00", url: "https://store.salla.sa/product/4" }
+        ];
+        
+        let currentCharts = {};
+        
+        // Load products
+        function loadProducts() {
+            const select = document.getElementById('productSelect');
+            select.innerHTML = '<option value="">اختر منتج...</option>';
+            
+            mockProducts.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} - ${product.price} ريال`;
+                option.dataset.url = product.url;
+                select.appendChild(option);
+            });
+            
+            select.addEventListener('change', function() {
+                const btn = document.getElementById('createChartBtn');
+                btn.disabled = !this.value;
+            });
+        }
+        
+        // Show chart editor
+        document.getElementById('createChartBtn').addEventListener('click', function() {
+            const select = document.getElementById('productSelect');
+            const selectedOption = select.options[select.selectedIndex];
+            
+            if (selectedOption.value) {
+                document.getElementById('selectedProduct').textContent = 
+                    `Creating size chart for: ${selectedOption.textContent}`;
+                document.getElementById('chartEditor').classList.remove('hidden');
+                
+                // Load existing chart if available
+                if (currentCharts[selectedOption.value]) {
+                    loadChartData(currentCharts[selectedOption.value]);
+                }
+            }
+        });
+        
+        // Save chart
+        document.getElementById('saveChartBtn').addEventListener('click', function() {
+            const select = document.getElementById('productSelect');
+            const selectedOption = select.options[select.selectedIndex];
+            const productId = selectedOption.value;
+            const productName = selectedOption.textContent;
+            const productUrl = selectedOption.dataset.url;
+            
+            // Collect size data
+            const sizeData = {};
+            const inputs = document.querySelectorAll('#sizeTableBody input');
+            
+            inputs.forEach(input => {
+                if (input.value) {
+                    const parts = input.name.split('_');
+                    const measurement = parts[0]; // chest, waist, length
+                    const size = parts[1].toUpperCase(); // xs -> XS
+                    
+                    if (!sizeData[size]) sizeData[size] = {};
+                    sizeData[size][measurement] = parseInt(input.value);
+                }
+            });
+            
+            // Save chart
+            const chartData = {
+                productId,
+                productName,
+                productUrl,
+                sizes: sizeData,
+                createdAt: new Date().toISOString()
+            };
+            
+            currentCharts[productId] = chartData;
+            
+            // Hide editor
+            document.getElementById('chartEditor').classList.add('hidden');
+            
+            // Refresh charts list
+            loadChartsList();
+            
+            alert('✅ Size chart saved successfully!');
+        });
+        
+        // Cancel editing
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('chartEditor').classList.add('hidden');
+        });
+        
+        // Load charts list
+        function loadChartsList() {
+            const container = document.getElementById('chartsList');
+            
+            if (Object.keys(currentCharts).length === 0) {
+                container.innerHTML = '<div class="loading">No size charts created yet. Create your first one above! 👆</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            Object.values(currentCharts).forEach(chart => {
+                const item = document.createElement('div');
+                item.className = 'chart-item';
+                item.innerHTML = `
+                    <div class="chart-info">
+                        <h3>${chart.productName}</h3>
+                        <p>Created: ${new Date(chart.createdAt).toLocaleDateString()}</p>
+                        <p>Sizes: ${Object.keys(chart.sizes).join(', ')}</p>
+                    </div>
+                    <div class="chart-actions">
+                        <a href="${chart.productUrl}" target="_blank" class="btn btn-small btn-success">🔗 View Product</a>
+                        <button class="btn btn-small btn-secondary" onclick="editChart('${chart.productId}')">✏️ Edit</button>
+                        <button class="btn btn-small" onclick="previewChart('${chart.productId}')">👁️ Preview</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // Edit chart
+        function editChart(productId) {
+            document.getElementById('productSelect').value = productId;
+            document.getElementById('createChartBtn').click();
+        }
+        
+        // Preview chart
+        function previewChart(productId) {
+            const chart = currentCharts[productId];
+            let preview = `Size Chart for: ${chart.productName}\n\n`;
+            
+            Object.entries(chart.sizes).forEach(([size, measurements]) => {
+                preview += `${size}: `;
+                preview += `Chest ${measurements.chest}cm, `;
+                preview += `Waist ${measurements.waist}cm, `;
+                preview += `Length ${measurements.length}cm\n`;
+            });
+            
+            alert(preview);
+        }
+        
+        // Load chart data into editor
+        function loadChartData(chart) {
+            Object.entries(chart.sizes).forEach(([size, measurements]) => {
+                Object.entries(measurements).forEach(([measurement, value]) => {
+                    const input = document.querySelector(`input[name="${measurement}_${size.toLowerCase()}"]`);
+                    if (input) input.value = value;
+                });
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            loadChartsList();
+        });
+    </script>
+</body>
+</html>
