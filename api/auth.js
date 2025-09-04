@@ -6,12 +6,22 @@ export default async function handler(req, res) {
       const { code, state } = req.query;
       
       if (!code) {
+        // Check if this is already a redirect attempt to prevent loops
+        const referer = req.headers.referer || '';
+        if (referer.includes('accounts.salla.sa')) {
+          return res.status(400).json({ 
+            error: 'OAuth Error', 
+            message: 'Authorization was not granted or was cancelled by the user.' 
+          });
+        }
+        
         // Redirect to Salla OAuth
         const salla_client_id = process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4';
         const redirect_uri = 'https://app.trynashr.com/api/auth';
-        const scope = 'read:products,read:stores';
+        const scope = 'offline_access+products.read+settings.read';
+        const state = Math.random().toString(36).substring(2, 15);
         
-        const authUrl = `https://accounts.salla.sa/oauth2/auth?response_type=code&client_id=${salla_client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=random_state`;
+        const authUrl = `https://accounts.salla.sa/oauth2/auth?response_type=code&client_id=${salla_client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
         
         return res.redirect(authUrl);
       }
@@ -44,9 +54,12 @@ export default async function handler(req, res) {
       
       const tokenData = await tokenResponse.json();
       
+      console.log('Token data received:', JSON.stringify(tokenData, null, 2));
+      
       // Store token and redirect to dashboard
       // In production, store in secure database
-      const dashboardUrl = `/dashboard?access_token=${tokenData.access_token}&store_id=${tokenData.merchant.id}`;
+      const storeId = tokenData.merchant?.id || tokenData.user?.id || tokenData.store_id || 'demo_store';
+      const dashboardUrl = `/dashboard?access_token=${tokenData.access_token}&store_id=${storeId}`;
       
       return res.redirect(dashboardUrl);
     }
