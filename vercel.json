@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "public/store-widget.js": {
-      "runtime": "@vercel/static"
-    }
-  },
   "rewrites": [
     {
       "source": "/dashboard",
