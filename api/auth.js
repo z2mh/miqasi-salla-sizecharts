@@ -20,19 +20,26 @@ export default async function handler(req, res) {
       const tokenResponse = await fetch('https://accounts.salla.sa/oauth2/token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({
+        body: new URLSearchParams({
           grant_type: 'authorization_code',
           client_id: process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4',
           client_secret: process.env.SALLA_OAUTH_CLIENT_SECRET || '1c2f53b28aea459463d2c91a69721449',
           code: code,
           redirect_uri: 'https://app.trynashr.com/api/auth'
-        })
+        }).toString()
       });
       
       if (!tokenResponse.ok) {
-        throw new Error('Failed to exchange code for token');
+        const errorText = await tokenResponse.text();
+        console.error('Token exchange error:', {
+          status: tokenResponse.status,
+          statusText: tokenResponse.statusText,
+          body: errorText
+        });
+        throw new Error(`Token exchange failed: ${tokenResponse.status} - ${errorText}`);
       }
       
       const tokenData = await tokenResponse.json();
