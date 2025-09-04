@@ -1,37 +1,20 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/*.js",
-      "use": "@vercel/node"
+      "source": "/dashboard",
+      "destination": "/api/dashboard"
     },
     {
-      "src": "public/**",
-      "use": "@vercel/static"
+      "source": "/widget.js",
+      "destination": "/public/store-widget.js"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/",
+      "destination": "/api/dashboard"
     }
-  ],
-  "routes": [
-    
-    {
-      "src": "/dashboard",
-      "dest": "/api/dashboard.js"
-    },
-    {
-      "src": "/widget.js",
-      "dest": "/public/store-widget.js"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/dashboard.js"
-    }
-  ],
-  "functions": {
-    "api/*.js": {
-      "runtime": "@vercel/node@18"
-    }
-  }
+  ]
 }
