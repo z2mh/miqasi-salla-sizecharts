@@ -6,7 +6,7 @@
     },
     {
       "source": "/widget.js",
-      "destination": "/public/store-widget.js"
+      "destination": "/api/widget"
     },
     {
       "source": "/",
