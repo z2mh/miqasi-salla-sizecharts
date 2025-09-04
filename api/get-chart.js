@@ -3,13 +3,21 @@ import { getChart } from '../lib/storage.js';
 
 export default async function handler(req, res) {
   try {
+    console.log('🔍 GET-CHART API Called:', {
+      method: req.method,
+      query: req.query,
+      url: req.url
+    });
+    
     if (req.method !== 'GET') {
+      console.log('❌ Wrong method:', req.method);
       return res.status(405).json({ error: 'Method not allowed' });
     }
     
     const { store_id, product_id } = req.query;
     
     if (!store_id || !product_id) {
+      console.log('❌ Missing parameters:', { store_id, product_id });
       return res.status(400).json({ 
         error: 'Missing required parameters: store_id, product_id' 
       });
