@@ -11,7 +11,7 @@
     "e-commerce"
   ],
   "homepage": "https://salla.dev",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "salla app serve",
