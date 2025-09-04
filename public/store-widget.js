@@ -38,9 +38,10 @@
     // Check if size chart exists for this product
     async function checkSizeChart(storeId, productId) {
         try {
-            const response = await fetch(`${WIDGET_CONFIG.apiBase}/chart/${storeId}/${productId}`);
+            const response = await fetch(`${WIDGET_CONFIG.apiBase}/chart-data?store_id=${storeId}&product_id=${productId}`);
             if (response.ok) {
-                return await response.json();
+                const data = await response.json();
+                return data.success ? data.data : null;
             }
             return null;
         } catch (error) {

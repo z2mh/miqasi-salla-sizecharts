@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/dashboard",
@@ -7,10 +12,6 @@
     {
       "source": "/widget.js",
       "destination": "/public/store-widget.js"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
     },
     {
       "source": "/",

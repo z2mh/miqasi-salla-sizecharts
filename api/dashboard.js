@@ -325,7 +325,7 @@ export default function handler(req, res) {
             try {
                 console.log(\`🔍 Loading chart for store: \${STORE_ID}, product: \${productId}\`);
                 
-                const response = await fetch(\`\${API_BASE}/api/get-chart?store_id=\${STORE_ID}&product_id=\${productId}\`);
+                const response = await fetch(\`\${API_BASE}/api/chart-data?store_id=\${STORE_ID}&product_id=\${productId}\`);
                 const data = await response.json();
                 
                 console.log('📋 API Response:', data);
@@ -419,7 +419,7 @@ export default function handler(req, res) {
             }
             
             try {
-                const response = await fetch(\`\${API_BASE}/api/save-chart\`, {
+                const response = await fetch(\`\${API_BASE}/api/chart-data\`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
