@@ -85,7 +85,7 @@ app.get('/oauth/callback',
 
 // Dashboard page
 app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'public/dashboard.html'));
 });
 
 // Error page
@@ -438,10 +438,15 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`🚀 Miqasi app is running on port ${port}`);
-  console.log(`📊 Dashboard: http://localhost:${port}/dashboard`);
-  console.log(`🔗 OAuth: http://localhost:${port}/auth/salla`);
-  console.log(`🌐 Widget: http://localhost:${port}/widget.js`);
-});
+// Start server (only if not in Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`🚀 Miqasi app is running on port ${port}`);
+    console.log(`📊 Dashboard: http://localhost:${port}/dashboard`);
+    console.log(`🔗 OAuth: http://localhost:${port}/auth/salla`);
+    console.log(`🌐 Widget: http://localhost:${port}/widget.js`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
