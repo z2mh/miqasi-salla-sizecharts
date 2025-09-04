@@ -218,15 +218,17 @@ export default function handler(req, res) {
         </div>
         
         <div class="card">
-            <h2>🔧 إعداد الويدجت</h2>
-            <p>قم بتفعيل الويدجت في متجرك لعرض أزرار دليل المقاسات تلقائياً:</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                <button class="btn" id="install-snippet-btn">📦 تفعيل الويدجت</button>
-                <button class="btn" id="remove-snippet-btn" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">🗑️ إزالة الويدجت</button>
+            <h2>📋 تعليمات الإعداد</h2>
+            <p>لتفعيل الويدجت في متجرك:</p>
+            <ol style="text-align: right; color: #555; line-height: 1.8;">
+                <li>اذهب إلى لوحة تحكم شركاء سلة</li>
+                <li>اختر تطبيقك → إعدادات → App Snippets</li>
+                <li>أضف مقطع جديد واستخدم الكود المرفق في الملف</li>
+                <li>احفظ الإعدادات وستظهر أزرار دليل المقاسات تلقائياً</li>
+            </ol>
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong>💡 ملاحظة:</strong> راجع ملف SALLA_SETUP.md للحصول على كود App Snippet كاملاً
             </div>
-            
-            <div id="snippet-status"></div>
         </div>
         
         <div class="card" id="chart-editor" style="display: none;">
@@ -278,8 +280,6 @@ export default function handler(req, res) {
         document.getElementById('product-select').addEventListener('change', handleProductSelect);
         document.getElementById('add-size-btn').addEventListener('click', addSize);
         document.getElementById('save-chart-btn').addEventListener('click', saveChart);
-        document.getElementById('install-snippet-btn').addEventListener('click', installSnippet);
-        document.getElementById('remove-snippet-btn').addEventListener('click', removeSnippet);
         
         async function loadProducts() {
             try {
@@ -323,18 +323,24 @@ export default function handler(req, res) {
         
         async function loadExistingSizeChart(productId) {
             try {
+                console.log(\`🔍 Loading chart for store: \${STORE_ID}, product: \${productId}\`);
+                
                 const response = await fetch(\`\${API_BASE}/api/get-chart?store_id=\${STORE_ID}&product_id=\${productId}\`);
                 const data = await response.json();
                 
-                if (data.success && data.data.sizes) {
+                console.log('📋 API Response:', data);
+                
+                if (data.success && data.data && data.data.sizes) {
                     sizeData = data.data.sizes;
+                    console.log('✅ Loaded existing sizes:', sizeData);
                     showMessage(\`📊 تم تحميل جدول المقاسات الموجود (\${Object.keys(sizeData).length} مقاسات)\`, 'success');
                 } else {
                     sizeData = {};
+                    console.log('ℹ️ No existing chart found');
                     showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
                 }
             } catch (error) {
-                console.log('No existing chart found or error loading:', error);
+                console.error('❌ Error loading chart:', error);
                 sizeData = {};
                 showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
             }
@@ -447,59 +453,8 @@ export default function handler(req, res) {
             }, 5000);
         }
         
-        // Snippet management functions
-        async function installSnippet() {
-            const statusDiv = document.getElementById('snippet-status');
-            statusDiv.innerHTML = '<div style="color: #666;">جاري تثبيت الويدجت...</div>';
-            
-            try {
-                const response = await fetch(\`\${API_BASE}/api/snippets?access_token=\${ACCESS_TOKEN}&action=create\`, {
-                    method: 'POST'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    statusDiv.innerHTML = '<div class="success">✅ تم تفعيل الويدجت بنجاح! سيظهر الآن في جميع صفحات المنتجات.</div>';
-                } else {
-                    statusDiv.innerHTML = \`<div class="error">❌ خطأ في تفعيل الويدجت: \${data.error}</div>\`;
-                }
-            } catch (error) {
-                console.error('Install snippet error:', error);
-                statusDiv.innerHTML = '<div class="error">❌ خطأ في الاتصال بالخادم</div>';
-            }
-        }
-        
-        async function removeSnippet() {
-            if (!confirm('هل تريد إزالة الويدجت من المتجر؟')) {
-                return;
-            }
-            
-            const statusDiv = document.getElementById('snippet-status');
-            statusDiv.innerHTML = '<div style="color: #666;">جاري إزالة الويدجت...</div>';
-            
-            try {
-                const response = await fetch(\`\${API_BASE}/api/snippets?access_token=\${ACCESS_TOKEN}&action=remove\`, {
-                    method: 'DELETE'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    statusDiv.innerHTML = '<div class="success">✅ تم إزالة الويدجت بنجاح.</div>';
-                } else {
-                    statusDiv.innerHTML = \`<div class="error">❌ خطأ في إزالة الويدجت: \${data.error}</div>\`;
-                }
-            } catch (error) {
-                console.error('Remove snippet error:', error);
-                statusDiv.innerHTML = '<div class="error">❌ خطأ في الاتصال بالخادم</div>';
-            }
-        }
-        
         // Make functions globally available
         window.removeSize = removeSize;
-        window.installSnippet = installSnippet;
-        window.removeSnippet = removeSnippet;
     </script>
 </body>
 </html>`;
