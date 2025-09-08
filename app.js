@@ -816,6 +816,39 @@ app.get("/dashboard.html", (req, res) => {
   res.redirect('/dashboard?store_id=' + (global.currentUser?.merchant_id || 'demo'));
 });
 
+// Analytics endpoint - see chart activity
+app.get("/api/analytics", (req, res) => {
+  try {
+    const currentUser = global.currentUser;
+    if (!currentUser) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    
+    const merchantId = currentUser.merchant_id;
+    const stats = storage.getMerchantStats(merchantId);
+    const charts = storage.loadMerchantCharts(merchantId);
+    
+    const analytics = {
+      merchant_id: merchantId,
+      total_charts: stats.charts,
+      file_size_bytes: stats.fileSize,
+      last_modified: stats.lastModified,
+      charts_detail: Object.entries(charts).map(([productId, chart]) => ({
+        product_id: productId,
+        created_at: chart.created_at,
+        updated_at: chart.updated_at,
+        sizes_count: chart.rows?.length || 0,
+        sizes: chart.rows?.map(r => r.size).join(', ') || 'None'
+      }))
+    };
+    
+    res.json(analytics);
+  } catch (error) {
+    console.error("Error getting analytics:", error);
+    res.status(500).json({ error: "Failed to get analytics" });
+  }
+});
+
 // Health check
 app.get("/health", (req, res) => {
   res.json({ status: "OK", service: "Miqasi Size Charts" });
