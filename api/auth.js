@@ -16,10 +16,14 @@ export default async function handler(req, res) {
         }
         
         // Redirect to Salla OAuth
-        const salla_client_id = process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4';
-        const redirect_uri = 'https://app.trynashr.com/api/auth';
+        const salla_client_id = process.env.SALLA_OAUTH_CLIENT_ID;
+        const redirect_uri = process.env.SALLA_OAUTH_CLIENT_REDIRECT_URI || 'https://app.trynashr.com/api/auth';
         const scope = 'offline_access+products.read+settings.read';
         const state = Math.random().toString(36).substring(2, 15);
+        
+        if (!salla_client_id) {
+          return res.status(500).json({ error: 'OAuth client ID not configured' });
+        }
         
         const authUrl = `https://accounts.salla.sa/oauth2/auth?response_type=code&client_id=${salla_client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
         
@@ -35,10 +39,10 @@ export default async function handler(req, res) {
         },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          client_id: process.env.SALLA_OAUTH_CLIENT_ID || 'bacae535-23fd-4860-839e-1e087c93f8e4',
-          client_secret: process.env.SALLA_OAUTH_CLIENT_SECRET || '1c2f53b28aea459463d2c91a69721449',
+          client_id: process.env.SALLA_OAUTH_CLIENT_ID,
+          client_secret: process.env.SALLA_OAUTH_CLIENT_SECRET,
           code: code,
-          redirect_uri: 'https://app.trynashr.com/api/auth'
+          redirect_uri: process.env.SALLA_OAUTH_CLIENT_REDIRECT_URI || 'https://app.trynashr.com/api/auth'
         }).toString()
       });
       
