@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         });
       }
 
-      const chartData = getChart(store_id, product_id);
+      const chartData = await getChart(store_id, product_id);
       
       if (!chartData) {
         console.log(`❌ No chart found for ${store_id}:${product_id}`);
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
         });
       }
 
-      const chartEntry = saveChart(store_id, product_id, chart_data, unit);
+      const chartEntry = await saveChart(store_id, product_id, chart_data, unit);
       
       console.log(`✅ Chart saved for ${store_id}:${product_id}`);
       return res.status(200).json({
