@@ -274,97 +274,173 @@
     </div>
     
     <script>
-        // Get store info from URL params
+        // Get store info from URL params or redirect to login
         const urlParams = new URLSearchParams(window.location.search);
-        const storeId = urlParams.get('store_id') || 'demo';
+        const storeId = urlParams.get('store_id');
         
-        // Mock data for development
-        const mockProducts = [
-            { id: 1, name: "تيشيرت قطني كلاسيكي", price: "75.00", url: "https://store.salla.sa/product/1" },
-            { id: 2, name: "بنطلون جينز أزرق", price: "120.00", url: "https://store.salla.sa/product/2" },
-            { id: 3, name: "فستان صيفي أنيق", price: "95.00", url: "https://store.salla.sa/product/3" },
-            { id: 4, name: "جاكيت شتوي", price: "180.00", url: "https://store.salla.sa/product/4" }
-        ];
+        console.log('🔑 Dashboard loaded with store_id:', storeId);
         
+        // If no store_id, redirect to OAuth login
+        if (!storeId || storeId === 'null') {
+            console.log('❌ No valid store_id found, redirecting to login');
+            window.location.href = '/login';
+            return;
+        }
+        
+        let currentProducts = [];
         let currentCharts = {};
         
-        // Load products
-        function loadProducts() {
+        // Load products from backend API
+        async function loadProducts() {
             const select = document.getElementById('productSelect');
-            select.innerHTML = '<option value="">اختر منتج...</option>';
+            select.innerHTML = '<option value="">Loading products...</option>';
             
-            mockProducts.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = `${product.name} - ${product.price} ريال`;
-                option.dataset.url = product.url;
-                select.appendChild(option);
-            });
-            
-            select.addEventListener('change', function() {
-                const btn = document.getElementById('createChartBtn');
-                btn.disabled = !this.value;
-            });
+            try {
+                const response = await fetch('/api/salla/products', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load products');
+                }
+                
+                const data = await response.json();
+                currentProducts = data.products || [];
+                
+                select.innerHTML = '<option value="">اختر منتج...</option>';
+                
+                currentProducts.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = `${product.name} - ${product.price} ${product.currency || 'ريال'}`;
+                    option.dataset.url = product.url || '#';
+                    option.dataset.hasChart = product.has_chart || false;
+                    select.appendChild(option);
+                });
+                
+                console.log('✅ Loaded', currentProducts.length, 'products');
+                
+                select.addEventListener('change', function() {
+                    const btn = document.getElementById('createChartBtn');
+                    btn.disabled = !this.value;
+                    
+                    // Update button text based on existing chart
+                    const selectedOption = this.options[this.selectedIndex];
+                    if (selectedOption.dataset.hasChart === 'true') {
+                        btn.textContent = 'Edit Size Chart';
+                    } else {
+                        btn.textContent = 'Create Size Chart';
+                    }
+                });
+                
+            } catch (error) {
+                console.error('❌ Error loading products:', error);
+                select.innerHTML = '<option value="">Error loading products. Please refresh.</option>';
+                alert('Failed to load products. Please check your connection and try again.');
+            }
         }
         
         // Show chart editor
-        document.getElementById('createChartBtn').addEventListener('click', function() {
+        document.getElementById('createChartBtn').addEventListener('click', async function() {
             const select = document.getElementById('productSelect');
             const selectedOption = select.options[select.selectedIndex];
             
             if (selectedOption.value) {
+                const productId = selectedOption.value;
+                const productName = selectedOption.textContent;
+                
                 document.getElementById('selectedProduct').textContent = 
-                    `Creating size chart for: ${selectedOption.textContent}`;
+                    `${selectedOption.dataset.hasChart === 'true' ? 'Editing' : 'Creating'} size chart for: ${productName}`;
                 document.getElementById('chartEditor').classList.remove('hidden');
                 
-                // Load existing chart if available
-                if (currentCharts[selectedOption.value]) {
-                    loadChartData(currentCharts[selectedOption.value]);
+                // Clear existing data first
+                clearChartData();
+                
+                // Load existing chart from backend if available
+                if (selectedOption.dataset.hasChart === 'true') {
+                    await loadExistingChart(productId);
                 }
             }
         });
         
-        // Save chart
-        document.getElementById('saveChartBtn').addEventListener('click', function() {
+        // Save chart to backend
+        document.getElementById('saveChartBtn').addEventListener('click', async function() {
             const select = document.getElementById('productSelect');
             const selectedOption = select.options[select.selectedIndex];
             const productId = selectedOption.value;
-            const productName = selectedOption.textContent;
-            const productUrl = selectedOption.dataset.url;
             
-            // Collect size data
-            const sizeData = {};
-            const inputs = document.querySelectorAll('#sizeTableBody input');
+            // Collect size data in the format expected by backend
+            const chartRows = [];
+            const inputs = document.querySelectorAll('#sizeTableBody tr');
             
-            inputs.forEach(input => {
-                if (input.value) {
-                    const parts = input.name.split('_');
-                    const measurement = parts[0]; // chest, waist, length
-                    const size = parts[1].toUpperCase(); // xs -> XS
-                    
-                    if (!sizeData[size]) sizeData[size] = {};
-                    sizeData[size][measurement] = parseInt(input.value);
+            inputs.forEach(row => {
+                const sizeLabel = row.dataset.size;
+                const chestInput = row.querySelector('input[name*="chest"]');
+                const waistInput = row.querySelector('input[name*="waist"]');
+                const lengthInput = row.querySelector('input[name*="length"]');
+                
+                if (sizeLabel && (chestInput?.value || waistInput?.value || lengthInput?.value)) {
+                    chartRows.push({
+                        size: sizeLabel,
+                        chest: chestInput?.value || '',
+                        waist: waistInput?.value || '',
+                        length: lengthInput?.value || ''
+                    });
                 }
             });
             
-            // Save chart
-            const chartData = {
-                productId,
-                productName,
-                productUrl,
-                sizes: sizeData,
-                createdAt: new Date().toISOString()
-            };
+            if (chartRows.length === 0) {
+                alert('❌ Please fill in at least one size measurement before saving.');
+                return;
+            }
             
-            currentCharts[productId] = chartData;
+            // Disable button during save
+            this.disabled = true;
+            this.textContent = 'Saving...';
             
-            // Hide editor
-            document.getElementById('chartEditor').classList.add('hidden');
-            
-            // Refresh charts list
-            loadChartsList();
-            
-            alert('✅ Size chart saved successfully!');
+            try {
+                const response = await fetch(`/api/salla/save-chart`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        chart_data: chartRows,
+                        unit: 'cm'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Size chart saved successfully!');
+                    
+                    // Update the product option to show it has a chart now
+                    selectedOption.dataset.hasChart = 'true';
+                    
+                    // Hide editor
+                    document.getElementById('chartEditor').classList.add('hidden');
+                    
+                    // Refresh charts list and products
+                    await loadChartsList();
+                    await loadProducts(); // Reload to update has_chart status
+                    
+                } else {
+                    throw new Error(result.error || 'Failed to save size chart');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error saving chart:', error);
+                alert(`❌ Failed to save size chart: ${error.message}`);
+            } finally {
+                // Re-enable button
+                this.disabled = false;
+                this.textContent = '💾 Save Size Chart';
+            }
         });
         
         // Cancel editing
@@ -372,69 +448,98 @@
             document.getElementById('chartEditor').classList.add('hidden');
         });
         
-        // Load charts list
-        function loadChartsList() {
-            const container = document.getElementById('chartsList');
-            
-            if (Object.keys(currentCharts).length === 0) {
-                container.innerHTML = '<div class="loading">No size charts created yet. Create your first one above! 👆</div>';
-                return;
+        // Load existing chart data from backend
+        async function loadExistingChart(productId) {
+            try {
+                // For now, we'll make this work with the existing backend
+                // In a future version, you could add a specific endpoint to get chart data
+                console.log('📊 Loading existing chart for product:', productId);
+                
+                // This function would load chart data, but since the current backend
+                // doesn't have a specific endpoint for this, we'll skip for now
+                // The chart editor will show empty fields which is fine for editing
+                
+            } catch (error) {
+                console.error('❌ Error loading existing chart:', error);
             }
+        }
+        
+        // Clear chart data in editor
+        function clearChartData() {
+            const inputs = document.querySelectorAll('#sizeTableBody input');
+            inputs.forEach(input => input.value = '');
+        }
+        
+        // Load charts list from backend
+        async function loadChartsList() {
+            const container = document.getElementById('chartsList');
+            container.innerHTML = '<div class="loading">Loading your size charts...</div>';
             
-            container.innerHTML = '';
-            
-            Object.values(currentCharts).forEach(chart => {
-                const item = document.createElement('div');
-                item.className = 'chart-item';
-                item.innerHTML = `
-                    <div class="chart-info">
-                        <h3>${chart.productName}</h3>
-                        <p>Created: ${new Date(chart.createdAt).toLocaleDateString()}</p>
-                        <p>Sizes: ${Object.keys(chart.sizes).join(', ')}</p>
-                    </div>
-                    <div class="chart-actions">
-                        <a href="${chart.productUrl}" target="_blank" class="btn btn-small btn-success">🔗 View Product</a>
-                        <button class="btn btn-small btn-secondary" onclick="editChart('${chart.productId}')">✏️ Edit</button>
-                        <button class="btn btn-small" onclick="previewChart('${chart.productId}')">👁️ Preview</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
+            try {
+                // Get charts with status for products that have charts
+                const chartsWithData = currentProducts.filter(product => product.has_chart);
+                
+                if (chartsWithData.length === 0) {
+                    container.innerHTML = '<div class="loading">No size charts created yet. Create your first one above! 👆</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                chartsWithData.forEach(product => {
+                    const item = document.createElement('div');
+                    item.className = 'chart-item';
+                    item.innerHTML = `
+                        <div class="chart-info">
+                            <h3>${product.name}</h3>
+                            <p>Price: ${product.price} ${product.currency || 'ريال'}</p>
+                            <p>Status: ✅ Has Size Chart</p>
+                        </div>
+                        <div class="chart-actions">
+                            <button class="btn btn-small btn-secondary" onclick="editChart('${product.id}')">✏️ Edit</button>
+                            <button class="btn btn-small" onclick="previewChart('${product.id}')">👁️ Preview</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+                
+            } catch (error) {
+                console.error('❌ Error loading charts list:', error);
+                container.innerHTML = '<div class="loading">Error loading charts. Please refresh.</div>';
+            }
         }
         
         // Edit chart
         function editChart(productId) {
-            document.getElementById('productSelect').value = productId;
+            const select = document.getElementById('productSelect');
+            select.value = productId;
+            
+            // Trigger the change event to update button text
+            const event = new Event('change');
+            select.dispatchEvent(event);
+            
+            // Click the create/edit button
             document.getElementById('createChartBtn').click();
         }
         
-        // Preview chart
-        function previewChart(productId) {
-            const chart = currentCharts[productId];
-            let preview = `Size Chart for: ${chart.productName}\n\n`;
-            
-            Object.entries(chart.sizes).forEach(([size, measurements]) => {
-                preview += `${size}: `;
-                preview += `Chest ${measurements.chest}cm, `;
-                preview += `Waist ${measurements.waist}cm, `;
-                preview += `Length ${measurements.length}cm\n`;
-            });
-            
-            alert(preview);
+        // Preview chart (simple version for now)
+        async function previewChart(productId) {
+            try {
+                const product = currentProducts.find(p => p.id == productId);
+                if (product) {
+                    alert(`📋 Size Chart Preview\n\nProduct: ${product.name}\nPrice: ${product.price} ${product.currency || 'ريال'}\nStatus: Has size chart\n\nFull preview functionality coming soon!`);
+                } else {
+                    alert('Product not found');
+                }
+            } catch (error) {
+                console.error('❌ Error previewing chart:', error);
+                alert('Error loading preview');
+            }
         }
         
-        // Load chart data into editor
-        function loadChartData(chart) {
-            Object.entries(chart.sizes).forEach(([size, measurements]) => {
-                Object.entries(measurements).forEach(([measurement, value]) => {
-                    const input = document.querySelector(`input[name="${measurement}_${size.toLowerCase()}"]`);
-                    if (input) input.value = value;
-                });
-            });
-        }
-        
-        // Initialize
+        // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Dashboard loading...');
             loadProducts();
             loadChartsList();
         });

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Size Guide Widget</title>
+</head>
+<body>
+    <h1>Test Product Page</h1>
+    
+    <!-- Simulate product page elements -->
+    <div class="product-info">
+        <h2>Sample Product</h2>
+        <div class="product-price">$29.99</div>
+        <div class="product-actions">
+            <button>Add to Cart</button>
+        </div>
+    </div>
+    
+    <!-- Load the widget -->
+    <script src="./store-widget.js"></script>
+    
+    <!-- Test script -->
+    <script>
+        // Simulate product page environment
+        window.location.pathname = '/product/123';
+        
+        // Mock Salla object
+        window.salla = {
+            config: {
+                store: { id: 'test-store' }
+            }
+        };
+        
+        console.log('Test page loaded - check for Miqasi messages');
+    </script>
+</body>
+</html>

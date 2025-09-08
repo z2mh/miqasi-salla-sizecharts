@@ -1,0 +1,29 @@
+{
+  "1": {
+    "rows": [
+      {
+        "size": "S",
+        "chest": "90",
+        "waist": "75",
+        "length": "67"
+      },
+      {
+        "size": "M",
+        "chest": "95",
+        "waist": "80",
+        "length": "69"
+      },
+      {
+        "size": "L",
+        "chest": "100",
+        "waist": "85",
+        "length": "71"
+      }
+    ],
+    "unit": "cm",
+    "created_by": "salla_settings",
+    "updated_at": "2025-09-08T19:28:28.363Z",
+    "merchant_id": "1974422259",
+    "product_id": "1"
+  }
+}

@@ -6,6 +6,7 @@ const passport = require("passport");
 const consolidate = require("consolidate");
 const getUnixTimestamp = require("./helpers/getUnixTimestamp");
 const bodyParser = require("body-parser");
+const JsonStorage = require("./lib/jsonStorage");
 const port = process.env.PORT || process.argv[2] || 8082;
 
 /*
@@ -143,15 +144,15 @@ app.get(
 // render the index page
 
 app.get("/", async function (req, res) {
+  // If user is authenticated, redirect to dashboard
+  const currentUser = global.currentUser || req.user;
+  if (currentUser) {
+    return res.redirect(`/dashboard?store_id=${currentUser.merchant_id}`);
+  }
+  
   let userDetails = { 
     user: req.user || global.currentUser, 
     isLogin: req.user || global.currentUser 
-  }
-  
-  // Use global stored user data instead of database
-  if (global.currentUser) {
-    userDetails.user = global.currentUser;
-    userDetails.isLogin = true;
   }
   
   res.render("index.html", userDetails);
@@ -213,8 +214,8 @@ app.get("/logout", function (req, res) {
 
 // ===== SIZE CHART MANAGEMENT SYSTEM =====
 
-// In-memory storage for demo (in production, use database)
-const sizeCharts = new Map(); // key: merchant_id:product_id, value: chart data
+// Initialize JSON storage system for persistent size charts
+const storage = new JsonStorage();
 
 // ADMIN ROUTES - For store owners to manage size charts
 
@@ -239,9 +240,8 @@ app.get("/admin/products", async (req, res) => {
     
     // Add size chart status to each product
     const productsWithCharts = mockProducts.map(product => {
-      const chartKey = `${merchantId}:${product.id}`;
-      const hasChart = sizeCharts.has(chartKey);
-      console.log(`📊 Product ${product.id}: Chart key "${chartKey}" exists: ${hasChart}`);
+      const hasChart = storage.chartExists(merchantId, product.id);
+      console.log(`📊 Product ${product.id}: Chart exists: ${hasChart}`);
       return {
         ...product,
         has_size_chart: hasChart
@@ -286,8 +286,7 @@ app.get("/admin/size-chart/:product_id", async (req, res) => {
     }
     
     // Get existing size chart if any
-    const chartKey = `${merchantId}:${product_id}`;
-    const existingChart = sizeCharts.get(chartKey) || {
+    const existingChart = storage.getChart(merchantId, product_id) || {
       rows: [
         { size: "S", chest: "", waist: "", length: "" },
         { size: "M", chest: "", waist: "", length: "" },
@@ -326,19 +325,19 @@ app.post("/admin/size-chart/:product_id", async (req, res) => {
     }
     
     const merchantId = currentUser.merchant_id;
-    const chartKey = `${merchantId}:${product_id}`;
     
     // Parse chart data and save
     const chartRows = JSON.parse(chart_data);
-    sizeCharts.set(chartKey, {
+    const success = storage.saveChart(merchantId, product_id, {
       rows: chartRows,
-      unit: unit || "cm",
-      updated_at: new Date().toISOString(),
-      merchant_id: merchantId,
-      product_id
+      unit: unit || "cm"
     });
     
-    console.log("✅ Size chart saved with key:", chartKey);
+    if (!success) {
+      throw new Error('Failed to save chart to storage');
+    }
+    
+    console.log("✅ Size chart saved for merchant:", merchantId, "product:", product_id);
     console.log("✅ Chart rows:", chartRows);
     
     res.json({ success: true, message: "Size chart saved successfully!" });
@@ -354,8 +353,7 @@ app.post("/admin/size-chart/:product_id", async (req, res) => {
 app.get("/recommend/:merchant_id/:product_id", async (req, res) => {
   try {
     const { merchant_id, product_id } = req.params;
-    const chartKey = `${merchant_id}:${product_id}`;
-    const chart = sizeCharts.get(chartKey);
+    const chart = storage.getChart(merchant_id, product_id);
     
     if (!chart) {
       return res.status(404).render("error.html", { 
@@ -385,8 +383,7 @@ app.post("/api/recommend", async (req, res) => {
       });
     }
     
-    const chartKey = `${merchant_id}:${product_id}`;
-    const chart = sizeCharts.get(chartKey);
+    const chart = storage.getChart(merchant_id, product_id);
     
     if (!chart) {
       return res.status(404).json({ error: "Size chart not found" });
@@ -487,12 +484,7 @@ app.get("/api/chart-status", (req, res) => {
     
     // Check products 1, 2, 3
     [1, 2, 3].forEach(productId => {
-      const chartKey = `${merchantId}:${productId}`;
-      const chart = sizeCharts.get(chartKey);
-      
-      // Consider chart as existing if it has at least one row with measurements
-      chartStatus[productId] = chart && chart.rows && 
-        chart.rows.some(row => row.chest || row.waist || row.length);
+      chartStatus[productId] = storage.chartExists(merchantId, productId);
     });
     
     console.log("📊 Chart status check:", chartStatus);
@@ -507,11 +499,8 @@ app.get("/api/chart-status", (req, res) => {
 app.get("/api/chart-exists/:merchant_id/:product_id", (req, res) => {
   try {
     const { merchant_id, product_id } = req.params;
-    const chartKey = `${merchant_id}:${product_id}`;
-    const chart = sizeCharts.get(chartKey);
-    
-    const exists = chart && chart.rows && 
-      chart.rows.some(row => row.chest || row.waist || row.length);
+    const chart = storage.getChart(merchant_id, product_id);
+    const exists = storage.chartExists(merchant_id, product_id);
     
     if (exists) {
       res.json({
@@ -612,16 +601,6 @@ app.get("/salla/settings", (req, res) => {
   `);
 });
 
-// API endpoint to get products
-app.get("/api/salla/products", (req, res) => {
-  // Mock products for now - in production this will call Salla API
-  res.json([
-    { id: 1, name: "تيشيرت قطني كلاسيكي" },
-    { id: 2, name: "بنطلون جينز" }, 
-    { id: 3, name: "فستان صيفي" }
-  ]);
-});
-
 // ===== SALLA PARTNERS APP ROUTES =====
 
 
@@ -647,7 +626,7 @@ app.get("/api/salla/products", async (req, res) => {
       
       const productsWithCharts = mockProducts.map(product => ({
         ...product,
-        has_chart: sizeCharts.has(`${merchantId}:${product.id}`)
+        has_chart: storage.chartExists(merchantId, product.id)
       }));
 
       return res.json({ success: true, products: productsWithCharts });
@@ -670,7 +649,7 @@ app.get("/api/salla/products", async (req, res) => {
       
       const productsWithCharts = sallaData.data.map(product => ({
         ...product,
-        has_chart: sizeCharts.has(`${merchantId}:${product.id}`)
+        has_chart: storage.chartExists(merchantId, product.id)
       }));
 
       res.json({ success: true, products: productsWithCharts });
@@ -695,19 +674,18 @@ app.post("/api/salla/save-chart", async (req, res) => {
     const currentUser = global.currentUser;
     const merchantId = currentUser ? currentUser.merchant_id : '1974422259';
     
-    const chartKey = `${merchantId}:${product_id}`;
-    
     // Save the chart
-    sizeCharts.set(chartKey, {
+    const success = storage.saveChart(merchantId, product_id, {
       rows: chart_data,
       unit: unit || 'cm',
-      updated_at: new Date().toISOString(),
-      merchant_id: merchantId,
-      product_id: product_id,
       created_by: 'salla_settings'
     });
     
-    console.log('✅ Salla size chart saved:', chartKey);
+    if (!success) {
+      throw new Error('Failed to save chart to storage');
+    }
+    
+    console.log('✅ Salla size chart saved for merchant:', merchantId, 'product:', product_id);
     
     // In production, also sync with Salla store theme
     await syncWithSallaTheme(merchantId, product_id, chart_data, unit);
@@ -715,7 +693,8 @@ app.post("/api/salla/save-chart", async (req, res) => {
     res.json({ 
       success: true, 
       message: 'Size chart saved successfully',
-      chart_key: chartKey 
+      merchant_id: merchantId,
+      product_id: product_id 
     });
 
   } catch (error) {
@@ -746,8 +725,7 @@ async function syncWithSallaTheme(merchantId, productId, chartData, unit) {
 app.get("/api/salla/chart/:merchant_id/:product_id", (req, res) => {
   try {
     const { merchant_id, product_id } = req.params;
-    const chartKey = `${merchant_id}:${product_id}`;
-    const chart = sizeCharts.get(chartKey);
+    const chart = storage.getChart(merchant_id, product_id);
     
     if (chart) {
       res.json({
@@ -819,6 +797,23 @@ app.post("/hooks/after-uninstall", (req, res) => {
     console.error('❌ Uninstallation webhook error:', error);
     res.status(500).json({ error: 'Uninstallation failed' });
   }
+});
+
+// Dashboard route - serves the dashboard with proper authentication
+app.get("/dashboard", (req, res) => {
+  // Check if user is authenticated
+  const currentUser = global.currentUser;
+  if (!currentUser) {
+    return res.redirect('/login');
+  }
+  
+  // Serve the dashboard HTML file directly
+  res.sendFile(__dirname + '/dashboard.html');
+});
+
+// Redirect /dashboard.html to /dashboard (for clean URLs)
+app.get("/dashboard.html", (req, res) => {
+  res.redirect('/dashboard?store_id=' + (global.currentUser?.merchant_id || 'demo'));
 });
 
 // Health check
