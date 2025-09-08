@@ -6,19 +6,25 @@ export default async function handler(req, res) {
       const { code, state } = req.query;
       
       if (!code) {
+        // Handle OAuth errors that come back from Salla
+        const { error, error_description } = req.query;
+        
+        if (error) {
+          console.error('❌ OAuth error from Salla:', { error, error_description });
+          return res.redirect(`/dashboard?error=${encodeURIComponent(error_description || error)}`);
+        }
+        
         // Check if this is already a redirect attempt to prevent loops
         const referer = req.headers.referer || '';
-        if (referer.includes('accounts.salla.sa')) {
-          return res.status(400).json({ 
-            error: 'OAuth Error', 
-            message: 'Authorization was not granted or was cancelled by the user.' 
-          });
+        if (referer.includes('accounts.salla.sa') || referer.includes('api/auth')) {
+          console.error('❌ Preventing redirect loop, referer:', referer);
+          return res.redirect('/dashboard?error=Authentication failed - redirect loop detected');
         }
         
         // Redirect to Salla OAuth
         const salla_client_id = process.env.SALLA_OAUTH_CLIENT_ID;
         const redirect_uri = process.env.SALLA_OAUTH_CLIENT_REDIRECT_URI || 'https://app.trynashr.com/api/auth';
-        const scope = 'offline_access+products.read+settings.read';
+        const scope = 'offline_access';
         const state = Math.random().toString(36).substring(2, 15);
         
         if (!salla_client_id) {
