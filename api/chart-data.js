@@ -1,5 +1,5 @@
 // Combined endpoint to handle both save and get chart operations
-import { getChart, saveChart } from '../lib/storage.js';
+import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
   try {
@@ -21,7 +21,8 @@ export default async function handler(req, res) {
         });
       }
 
-      const chartData = await getChart(store_id, product_id);
+      const chartKey = `sizechart:${store_id}:${product_id}`;
+      const chartData = await kv.get(chartKey);
       
       if (!chartData) {
         console.log(`❌ No chart found for ${store_id}:${product_id}`);
@@ -31,10 +32,10 @@ export default async function handler(req, res) {
         });
       }
 
-      console.log(`✅ Chart found for ${store_id}:${product_id}`);
+      console.log(`✅ Chart found in KV for ${store_id}:${product_id}`);
       return res.status(200).json({
         success: true,
-        data: chartData
+        data: typeof chartData === 'string' ? JSON.parse(chartData) : chartData
       });
     }
 
@@ -49,9 +50,25 @@ export default async function handler(req, res) {
         });
       }
 
-      const chartEntry = await saveChart(store_id, product_id, chart_data, unit);
+      const chartKey = `sizechart:${store_id}:${product_id}`;
+      const storeKey = `sizechart:store:${store_id}`;
       
-      console.log(`✅ Chart saved for ${store_id}:${product_id}`);
+      const chartEntry = {
+        store_id,
+        product_id,
+        sizes: chart_data,
+        unit: unit || 'cm',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      // Save chart to KV
+      await kv.set(chartKey, JSON.stringify(chartEntry));
+      
+      // Add to store's product list
+      await kv.sadd(storeKey, product_id);
+      
+      console.log(`✅ Chart saved to KV for ${store_id}:${product_id}`);
       return res.status(200).json({
         success: true,
         message: 'Size chart saved successfully',
