@@ -18,7 +18,7 @@ export default function handler(req, res) {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0; 
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: #ed9166; 
             color: white;
             min-height: 100vh;
             display: flex;
@@ -26,7 +26,7 @@ export default function handler(req, res) {
             justify-content: center;
         }
         .container {
-            background: rgba(255,255,255,0.95);
+            background: #fffffff2;
             color: #333;
             padding: 60px;
             border-radius: 20px;
@@ -39,7 +39,7 @@ export default function handler(req, res) {
         h1 { color: #333; font-size: 2rem; margin-bottom: 15px; }
         .subtitle { color: #666; margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; }
         .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ed9166;
             color: white;
             border: none;
             padding: 18px 40px;
@@ -64,7 +64,7 @@ export default function handler(req, res) {
             margin-top: 30px;
         }
         .feature { margin: 15px 0; color: #555; }
-        .feature strong { color: #667eea; }
+        .feature strong { color: #ed9166; }
     </style>
 </head>
 <body>
@@ -113,7 +113,7 @@ export default function handler(req, res) {
             color: #333;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ed9166;
             color: white;
             padding: 20px;
             text-align: center;
@@ -149,10 +149,10 @@ export default function handler(req, res) {
         }
         select:focus, input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #ed9166;
         }
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ed9166;
             color: white;
             border: none;
             font-weight: 600;
@@ -174,7 +174,7 @@ export default function handler(req, res) {
             text-align: center;
         }
         .size-table th {
-            background: #667eea;
+            background: #ed9166;
             color: white;
         }
         .loading {
@@ -260,21 +260,21 @@ export default function handler(req, res) {
             <div>
                 <h2>خطوات إضافة جدول المقاسات</h2>
                 
-                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">1</div>
-                    <h4 style="color: #667eea; margin-bottom: 8px;">اختر المنتج</h4>
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #ed9166; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #ed9166; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">1</div>
+                    <h4 style="color: #ed9166; margin-bottom: 8px;">اختر المنتج</h4>
                     <p>اختر المنتج الذي تريد إضافة جدول المقاسات له من القائمة أدناه</p>
                 </div>
                 
-                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">2</div>
-                    <h4 style="color: #667eea; margin-bottom: 8px;">أضف المقاسات</h4>
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #ed9166; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #ed9166; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">2</div>
+                    <h4 style="color: #ed9166; margin-bottom: 8px;">أضف المقاسات</h4>
                     <p>أدخل جميع المقاسات المتوفرة مع قياسات الصدر والخصر والطول لكل مقاس</p>
                 </div>
                 
-                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">3</div>
-                    <h4 style="color: #667eea; margin-bottom: 8px;">احفظ الجدول</h4>
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #ed9166; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #ed9166; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">3</div>
+                    <h4 style="color: #ed9166; margin-bottom: 8px;">احفظ الجدول</h4>
                     <p>اضغط على "حفظ جدول المقاسات" وستظهر الأيقونة تلقائياً في صفحة المنتج</p>
                 </div>
             </div>
@@ -296,18 +296,18 @@ export default function handler(req, res) {
                     
                     <!-- Measurement Instructions -->
                     <div style="text-align: right; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
-                        <h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.1rem;">تعليمات أخذ القياسات:</h4>
+                        <h4 style="color: #ed9166; margin-bottom: 15px; font-size: 1.1rem;">تعليمات أخذ القياسات:</h4>
                         <ul style="list-style-type: none; padding: 0;">
                             <li style="padding: 8px 0; border-bottom: 1px solid #f0f0f0; line-height: 1.6;">
-                                <strong style="color: #667eea; margin-left: 8px;">الصدر:</strong>
+                                <strong style="color: #ed9166; margin-left: 8px;">الصدر:</strong>
                                 قس حول أوسع جزء من الصدر تحت الإبطين مباشرة. تأكد من أن شريط القياس مستوي عبر الظهر وغير مشدود بقوة.
                             </li>
                             <li style="padding: 8px 0; border-bottom: 1px solid #f0f0f0; line-height: 1.6;">
-                                <strong style="color: #667eea; margin-left: 8px;">الخصر:</strong>
+                                <strong style="color: #ed9166; margin-left: 8px;">الخصر:</strong>
                                 قس حول أضيق جزء من الخصر (عادة فوق السرة). اتركي شريط القياس مريحاً وطبيعياً.
                             </li>
                             <li style="padding: 8px 0; line-height: 1.6;">
-                                <strong style="color: #667eea; margin-left: 8px;">الطول:</strong>
+                                <strong style="color: #ed9166; margin-left: 8px;">الطول:</strong>
                                 قس من أعلى نقطة في الكتف (عند التقاء الكتف والرقبة) إلى النقطة المرغوبة للطول النهائي للملابس.
                             </li>
                         </ul>
@@ -385,24 +385,19 @@ export default function handler(req, res) {
         
         async function loadExistingSizeChart(productId) {
             try {
-                console.log(\`🔍 Loading chart for store: \${STORE_ID}, product: \${productId}\`);
                 
                 const response = await fetch(\`\${API_BASE}/api/chart-data?store_id=\${STORE_ID}&product_id=\${productId}\`);
                 const data = await response.json();
                 
-                console.log('📋 API Response:', data);
                 
                 if (data.success && data.data && data.data.sizes) {
                     sizeData = data.data.sizes;
-                    console.log('✅ Loaded existing sizes:', sizeData);
                     showMessage(\`📊 تم تحميل جدول المقاسات الموجود (\${Object.keys(sizeData).length} مقاسات)\`, 'success');
                 } else {
                     sizeData = {};
-                    console.log('ℹ️ No existing chart found');
                     showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
                 }
             } catch (error) {
-                console.error('❌ Error loading chart:', error);
                 sizeData = {};
                 showMessage('💡 لا يوجد جدول مقاسات لهذا المنتج - يمكنك إنشاء واحد جديد', 'success');
             }
@@ -502,7 +497,6 @@ export default function handler(req, res) {
                     showMessage('خطأ في حفظ جدول المقاسات: ' + (data.message || 'خطأ غير معروف'), 'error');
                 }
             } catch (error) {
-                console.error('Save error:', error);
                 showMessage('خطأ في الاتصال بالخادم', 'error');
             }
         }

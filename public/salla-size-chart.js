@@ -56,39 +56,32 @@ if (typeof window !== 'undefined' && window.salla) {
           // Size chart data received successfully
           this.renderSizeChartButton(data.data);
         } else {
-          console.log('Miqasi: No size chart found for this product');
         }
 
       } catch (error) {
         loading.style.display = 'none';
-        console.error('Miqasi: Error loading size chart:', error);
       }
     }
 
     getProductId() {
-      console.log('Miqasi: Detecting product ID from URL:', window.location.pathname);
       
       // Method 1: From URL pattern /p123456 at the end
       const urlMatch = window.location.pathname.match(/\/p(\d+)$/);
       if (urlMatch) {
-        console.log('Miqasi: Product ID found in URL:', urlMatch[1]);
         return urlMatch[1];
       }
 
       // Method 2: From Salla's global product object
       if (window.salla && window.salla.product && window.salla.product.id) {
-        console.log('Miqasi: Product ID found in Salla object:', window.salla.product.id);
         return window.salla.product.id.toString();
       }
 
       // Method 3: From element attribute
       const productEl = document.querySelector('[data-product-id]');
       if (productEl) {
-        console.log('Miqasi: Product ID found in data attribute:', productEl.dataset.productId);
         return productEl.dataset.productId;
       }
 
-      console.log('Miqasi: No product ID found - not a product page');
       return null;
     }
 
@@ -151,12 +144,9 @@ if (typeof window !== 'undefined' && window.salla) {
       });
 
       content.appendChild(button);
-      console.log('Miqasi: Size chart button added');
     }
 
     openSizeChartModal(chartData) {
-      console.log('Miqasi: Opening modal with chart data:', JSON.stringify(chartData, null, 2));
-      console.log('Miqasi: Available sizes:', Object.keys(chartData.sizes || {}));
       
       // Create beautiful modal overlay
       const modal = document.createElement('div');
@@ -656,27 +646,22 @@ if (typeof window !== 'undefined' && window.salla) {
       };
       document.addEventListener('keydown', escHandler);
 
-      console.log('Miqasi: Size chart modal opened');
     }
   }
 
   // Register the custom element
   if (!customElements.get('salla-size-chart')) {
     customElements.define('salla-size-chart', SallaSizeChart);
-    console.log('Miqasi: Custom element registered');
   }
 
   // Auto-initialize on product pages
   function initSizeChart() {
-    console.log('Miqasi: Checking if this is a product page...');
-    console.log('Miqasi: Current URL:', window.location.pathname);
     
     // Enhanced product page detection
     const urlHasProductId = /\/p(\d+)$/.test(window.location.pathname);
     const sallaHasProduct = !!(window.salla?.product?.id);
     const hasProductElement = !!document.querySelector('[data-product-id]');
     
-    console.log('Miqasi: Product page checks:', {
       urlHasProductId,
       sallaHasProduct,
       hasProductElement
@@ -685,15 +670,12 @@ if (typeof window !== 'undefined' && window.salla) {
     const isProductPage = urlHasProductId || sallaHasProduct || hasProductElement;
     
     if (!isProductPage) {
-      console.log('Miqasi: Not a product page, skipping initialization');
       return;
     }
 
-    console.log('Miqasi: Product page detected, looking for insertion point...');
 
     // Check if component already exists
     if (document.querySelector('salla-size-chart')) {
-      console.log('Miqasi: Size chart component already exists');
       return;
     }
 
@@ -711,12 +693,10 @@ if (typeof window !== 'undefined' && window.salla) {
       if (element) {
         const sizeChart = document.createElement('salla-size-chart');
         element.parentNode.insertBefore(sizeChart, element.nextSibling);
-        console.log('Miqasi: Size chart component inserted after', selector);
         return;
       }
     }
     
-    console.log('Miqasi: No suitable insertion point found');
   }
 
   // Initialize when Salla is ready
@@ -737,5 +717,4 @@ if (typeof window !== 'undefined' && window.salla) {
   }
 
 } else {
-  console.warn('Miqasi: Salla object not found, component not registered');
 }
