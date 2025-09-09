@@ -16,23 +16,89 @@
         position: 'after_price'
     };
     
-    // Detect current product
+    // Detect current product - Enhanced for Salla URL patterns
     function getCurrentProduct() {
-        // Try multiple methods to get product ID
-        const productId = 
-            window.location.pathname.match(/\/product\/(\d+)/)?.[1] ||
-            document.querySelector('[data-product-id]')?.dataset.productId ||
-            document.querySelector('meta[property="product:id"]')?.content ||
-            window.salla?.product?.id;
-            
-        return productId;
+        console.log('Miqasi: Detecting product ID from URL:', window.location.pathname);
+        
+        // Method 1: Salla URL pattern /p123456 at the end
+        const pathMatch = window.location.pathname.match(/\/p(\d+)$/);
+        if (pathMatch) {
+            console.log('Miqasi: Product ID found in URL path:', pathMatch[1]);
+            return pathMatch[1];
+        }
+        
+        // Method 2: Standard /product/123 format
+        const productMatch = window.location.pathname.match(/\/product\/(\d+)/);
+        if (productMatch) {
+            console.log('Miqasi: Product ID found in product URL:', productMatch[1]);
+            return productMatch[1];
+        }
+        
+        // Method 3: Data attributes
+        const productEl = document.querySelector('[data-product-id]');
+        if (productEl && productEl.dataset.productId) {
+            console.log('Miqasi: Product ID found in data attribute:', productEl.dataset.productId);
+            return productEl.dataset.productId;
+        }
+        
+        // Method 4: Salla global object
+        if (window.salla && window.salla.product && window.salla.product.id) {
+            console.log('Miqasi: Product ID found in Salla object:', window.salla.product.id);
+            return window.salla.product.id.toString();
+        }
+        
+        // Method 5: Meta tags
+        const metaEl = document.querySelector('meta[property="product:id"]');
+        if (metaEl && metaEl.content) {
+            console.log('Miqasi: Product ID found in meta tag:', metaEl.content);
+            return metaEl.content;
+        }
+        
+        console.log('Miqasi: No product ID found');
+        return null;
     }
     
-    // Get store ID from Salla
+    // Get store ID from Salla - Enhanced with proper Salla API methods
     function getStoreId() {
-        return window.salla?.config?.store?.id || 
-               document.querySelector('meta[name="store-id"]')?.content ||
-               'demo';
+        console.log('Miqasi: Detecting store ID...');
+        
+        // Method 1: Salla config API (recommended)
+        if (window.salla && window.salla.config && window.salla.config.get) {
+            try {
+                const storeId = window.salla.config.get('store.id');
+                if (storeId) {
+                    console.log('Miqasi: Store ID from Salla config:', storeId);
+                    return storeId;
+                }
+            } catch (e) {
+                console.log('Miqasi: Could not get store ID from Salla config');
+            }
+        }
+        
+        // Method 2: Legacy Salla object
+        if (window.salla && window.salla.config && window.salla.config.store && window.salla.config.store.id) {
+            console.log('Miqasi: Store ID from legacy Salla object:', window.salla.config.store.id);
+            return window.salla.config.store.id;
+        }
+        
+        // Method 3: Meta tag
+        const metaEl = document.querySelector('meta[name="store-id"]');
+        if (metaEl && metaEl.content) {
+            console.log('Miqasi: Store ID from meta tag:', metaEl.content);
+            return metaEl.content;
+        }
+        
+        // Method 4: URL subdomain extraction (store.salla.sa)
+        const hostname = window.location.hostname;
+        const subdomainMatch = hostname.match(/^([^.]+)\.salla\.sa$/);
+        if (subdomainMatch) {
+            console.log('Miqasi: Store ID from subdomain:', subdomainMatch[1]);
+            return subdomainMatch[1];
+        }
+        
+        // Method 5: Fallback for demo/development
+        console.log('Miqasi: Using fallback store ID: demo_store');
+        return 'demo_store';
     }
     
     // Check if size chart exists for this product
@@ -382,10 +448,18 @@
     
     // Initialize widget
     async function initWidget() {
+        console.log('Miqasi: Widget initialization started v6.0');
+        
+        // Prevent double initialization
+        if (document.getElementById('miqasi-size-guide-btn')) {
+            console.log('Miqasi: Widget already initialized, skipping');
+            return;
+        }
+        
         // Check if we're on a product page
         const productId = getCurrentProduct();
         if (!productId) {
-            console.log('Miqasi: Not a product page');
+            console.log('Miqasi: Not a product page, skipping initialization');
             return;
         }
         
@@ -398,6 +472,8 @@
             console.log('Miqasi: No size chart found for this product');
             return;
         }
+        
+        console.log('Miqasi: Size chart data found:', chartData);
         
         // Find where to insert the button
         const insertionPoint = findInsertionPoint();
@@ -415,7 +491,7 @@
             insertionPoint.parentNode.insertBefore(button, insertionPoint);
         }
         
-        console.log('Miqasi: Size guide button added successfully');
+        console.log('Miqasi: Size guide button added successfully to page!');
     }
     
     // Initialize when DOM is ready
