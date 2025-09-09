@@ -33,10 +33,21 @@ export default async function handler(req, res) {
       }
 
       const chartKey = `sizechart:${store_id}:${product_id}`;
-      const chartData = await kv.get(chartKey);
+      let chartData = await kv.get(chartKey);
+      
+      // Fallback: try with demo_store if not found
+      if (!chartData) {
+        console.log(`❌ No chart found for ${store_id}:${product_id}, trying demo_store fallback...`);
+        const fallbackKey = `sizechart:demo_store:${product_id}`;
+        chartData = await kv.get(fallbackKey);
+        
+        if (chartData) {
+          console.log(`✅ Chart found with demo_store fallback for product ${product_id}`);
+        }
+      }
       
       if (!chartData) {
-        console.log(`❌ No chart found for ${store_id}:${product_id}`);
+        console.log(`❌ No chart found for ${store_id}:${product_id} or demo_store:${product_id}`);
         return res.status(404).json({ 
           success: false,
           message: 'No size chart found for this product'
