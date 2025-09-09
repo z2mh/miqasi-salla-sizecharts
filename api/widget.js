@@ -4,7 +4,7 @@ import path from 'path';
 export default function handler(req, res) {
   try {
     // Read the widget file from public directory
-    const widgetPath = path.join(process.cwd(), 'public', 'store-widget.js');
+    const widgetPath = path.join(process.cwd(), 'public', 'salla-size-chart.js');
     const widgetContent = fs.readFileSync(widgetPath, 'utf8');
     
     // Set appropriate headers
