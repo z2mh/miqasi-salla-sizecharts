@@ -132,77 +132,160 @@ if (typeof window !== 'undefined' && window.salla) {
     }
 
     openSizeChartModal(chartData) {
-      // Create modal using Salla's modal system if available
+      // Create beautiful modal overlay
       const modal = document.createElement('div');
-      modal.className = 'modal fade';
+      modal.className = 'miqasi-modal-overlay';
       modal.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1050;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 999999;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 20px;
+        box-sizing: border-box;
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.3s ease-out;
       `;
 
-      // Build size table
+      // Build size table with enhanced styling
       let sizeRows = '';
       const sizes = Object.keys(chartData.sizes || {}).sort();
-      sizes.forEach(size => {
+      sizes.forEach((size, index) => {
         const measurements = chartData.sizes[size];
+        const rowClass = index % 2 === 0 ? 'even-row' : 'odd-row';
         sizeRows += `
-          <tr>
-            <td class="text-center font-weight-bold" style="background: #f8f9ff;">${size}</td>
-            <td class="text-center">${measurements.chest || '-'} سم</td>
-            <td class="text-center">${measurements.waist || '-'} سم</td>
-            <td class="text-center">${measurements.length || '-'} سم</td>
+          <tr class="${rowClass}" style="transition: all 0.2s ease;">
+            <td style="padding: 15px 12px; text-align: center; font-weight: 700; font-size: 16px; background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%); border: 1px solid #e1e8ed; color: #2c3e50;">${size}</td>
+            <td style="padding: 15px 12px; text-align: center; font-size: 15px; border: 1px solid #e1e8ed; color: #34495e;">${measurements.chest || '-'} <span style="color: #7f8c8d; font-size: 13px;">سم</span></td>
+            <td style="padding: 15px 12px; text-align: center; font-size: 15px; border: 1px solid #e1e8ed; color: #34495e;">${measurements.waist || '-'} <span style="color: #7f8c8d; font-size: 13px;">سم</span></td>
+            <td style="padding: 15px 12px; text-align: center; font-size: 15px; border: 1px solid #e1e8ed; color: #34495e;">${measurements.length || '-'} <span style="color: #7f8c8d; font-size: 13px;">سم</span></td>
           </tr>
         `;
       });
 
       modal.innerHTML = `
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content" style="border-radius: 15px;">
-            <div class="modal-header border-0" style="padding: 30px 30px 0;">
-              <h4 class="modal-title">📏 دليل المقاسات</h4>
-              <button type="button" class="close" data-dismiss="modal" style="font-size: 24px;">
-                <span>&times;</span>
+        <div style="
+          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+          border-radius: 20px;
+          max-width: 650px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+          animation: slideUp 0.4s ease-out;
+          position: relative;
+        ">
+          <div style="padding: 35px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9;">
+              <div>
+                <h2 style="color: #1e293b; font-size: 28px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 32px;">📏</span>
+                  دليل المقاسات
+                </h2>
+                <p style="color: #64748b; margin: 8px 0 0 44px; font-size: 14px;">اختر المقاس المناسب لك</p>
+              </div>
+              <button class="miqasi-close-btn" style="
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                color: white;
+                border: none;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                font-size: 20px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+              " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(239, 68, 68, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)'">
+                ✕
               </button>
             </div>
-            <div class="modal-body" style="padding: 20px 30px 30px;">
-              <div class="table-responsive">
-                <table class="table table-bordered">
-                  <thead style="background: #667eea; color: white;">
-                    <tr>
-                      <th class="text-center">المقاس</th>
-                      <th class="text-center">الصدر</th>
-                      <th class="text-center">الخصر</th>
-                      <th class="text-center">الطول</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${sizeRows}
-                  </tbody>
-                </table>
-              </div>
-              <div class="alert alert-info text-center" style="margin-top: 20px;">
-                <strong>💡 ملاحظة:</strong> جميع القياسات بالسنتيمتر. للحصول على أفضل النتائج، قم بقياس الجسم مباشرة.
+            
+            <div style="overflow-x: auto; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+              <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;">
+                <thead>
+                  <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">المقاس</th>
+                    <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">الصدر</th>
+                    <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">الخصر</th>
+                    <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">الطول</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${sizeRows}
+                </tbody>
+              </table>
+            </div>
+            
+            <div style="
+              background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+              padding: 20px;
+              border-radius: 12px;
+              border-right: 4px solid #0ea5e9;
+              box-shadow: 0 2px 8px rgba(14, 165, 233, 0.1);
+            ">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <span style="font-size: 20px; margin-top: 2px;">💡</span>
+                <div>
+                  <p style="margin: 0; color: #0c4a6e; font-weight: 600; font-size: 15px; margin-bottom: 4px;">ملاحظة مهمة:</p>
+                  <p style="margin: 0; color: #0369a1; font-size: 14px; line-height: 1.6;">
+                    جميع القياسات بالسنتيمتر. للحصول على أفضل النتائج، قم بقياس الجسم مباشرة باستخدام شريط القياس.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        
+        <style>
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          @keyframes slideUp {
+            from { 
+              opacity: 0; 
+              transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+              opacity: 1; 
+              transform: translateY(0) scale(1); 
+            }
+          }
+          
+          .even-row:hover {
+            background: #f8fafc !important;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+          
+          .odd-row:hover {
+            background: #f1f5f9 !important;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+        </style>
       `;
 
       document.body.appendChild(modal);
 
-      // Close handlers
-      const closeBtn = modal.querySelector('.close');
+      // Enhanced close functionality
+      const closeBtn = modal.querySelector('.miqasi-close-btn');
       const closeModal = () => {
-        document.body.removeChild(modal);
+        modal.style.animation = 'fadeOut 0.2s ease-in';
+        setTimeout(() => {
+          if (document.body.contains(modal)) {
+            document.body.removeChild(modal);
+          }
+        }, 200);
       };
 
       closeBtn.addEventListener('click', closeModal);
@@ -210,7 +293,7 @@ if (typeof window !== 'undefined' && window.salla) {
         if (e.target === modal) closeModal();
       });
 
-      // Close on Escape
+      // Enhanced escape key handling
       const escHandler = (e) => {
         if (e.key === 'Escape') {
           closeModal();
