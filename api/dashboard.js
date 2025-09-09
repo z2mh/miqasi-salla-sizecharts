@@ -217,23 +217,81 @@ export default function handler(req, res) {
             </div>
         </div>
         
-        <div class="card">
-            <h2>📋 تعليمات الإعداد</h2>
-            <p>لتفعيل الويدجت في متجرك:</p>
-            <ol style="text-align: right; color: #555; line-height: 1.8;">
-                <li>اذهب إلى لوحة تحكم شركاء سلة</li>
-                <li>اختر تطبيقك → إعدادات → App Snippets</li>
-                <li>أضف مقطع جديد واستخدم الكود المرفق في الملف</li>
-                <li>احفظ الإعدادات وستظهر أزرار دليل المقاسات تلقائياً</li>
-            </ol>
-            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                <strong>💡 ملاحظة:</strong> راجع ملف SALLA_SETUP.md للحصول على كود App Snippet كاملاً
+        <div class="card" style="display: grid; grid-template-columns: 1fr 400px; gap: 30px;">
+            <!-- Instructions Panel -->
+            <div>
+                <h2>خطوات إضافة جدول المقاسات</h2>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">1</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">اختر المنتج</h4>
+                    <p>اختر المنتج الذي تريد إضافة جدول المقاسات له من القائمة أدناه</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">2</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">أضف المقاسات</h4>
+                    <p>أدخل جميع المقاسات المتوفرة مع قياسات الصدر والخصر والطول لكل مقاس</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 10px; float: right;">3</div>
+                    <h4 style="color: #667eea; margin-bottom: 8px;">احفظ الجدول</h4>
+                    <p>اضغط على "حفظ جدول المقاسات" وستظهر الأيقونة تلقائياً في صفحة المنتج</p>
+                </div>
+            </div>
+            
+            <!-- Measurement Guide Panel -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 12px; border: 1px solid #ffeaa7;">
+                <div style="text-align: center;">
+                    <h3 style="color: #856404; font-size: 1.3rem; margin-bottom: 20px;">📐 دليل أخذ القياسات</h3>
+                    
+                    <!-- Measurement Image Placeholder -->
+                    <div style="padding: 40px; background: #f0f0f0; border: 2px dashed #ccc; border-radius: 10px; color: #666; margin-bottom: 20px;">
+                        📷 ضع صورة دليل القياسات هنا<br>
+                        <small>(measurement-guide.jpg)</small>
+                    </div>
+                    
+                    <!-- Measurement Instructions -->
+                    <div style="text-align: right; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+                        <h4 style="color: #667eea; margin-bottom: 15px; font-size: 1.1rem;">تعليمات أخذ القياسات:</h4>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li style="padding: 8px 0; border-bottom: 1px solid #f0f0f0; line-height: 1.6;">
+                                <strong style="color: #667eea; margin-left: 8px;">الصدر:</strong>
+                                قس حول أوسع جزء من الصدر تحت الإبطين مباشرة. تأكد من أن شريط القياس مستوي عبر الظهر وغير مشدود بقوة.
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px solid #f0f0f0; line-height: 1.6;">
+                                <strong style="color: #667eea; margin-left: 8px;">الخصر:</strong>
+                                قس حول أضيق جزء من الخصر (عادة فوق السرة). اتركي شريط القياس مريحاً وطبيعياً.
+                            </li>
+                            <li style="padding: 8px 0; line-height: 1.6;">
+                                <strong style="color: #667eea; margin-left: 8px;">الطول:</strong>
+                                قس من أعلى نقطة في الكتف (عند التقاء الكتف والرقبة) إلى النقطة المرغوبة للطول النهائي للملابس.
+                            </li>
+                        </ul>
+                        
+                        <!-- Additional Tips -->
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">💡 نصائح مهمة</h4>
+                            <ul style="text-align: right; list-style: none; padding: 0;">
+                                <li style="margin-bottom: 8px;">✅ استعن بشخص آخر لأخذ القياسات</li>
+                                <li style="margin-bottom: 8px;">✅ ارتدي ملابس مناسبة ومريحة</li>
+                                <li style="margin-bottom: 8px;">✅ تأكد من استقامة الجسم أثناء القياس</li>
+                                <li style="margin-bottom: 8px;">✅ تأكد من أن شريط القياس غير مشدود بقوة</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="card" id="chart-editor" style="display: none;">
             <h2>📏 إنشاء جدول المقاسات</h2>
             <div id="message-area"></div>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                <strong style="color: #856404;">⚠️ تأكد من دقة القياسات:</strong> استخدم الصورة التوضيحية والتعليمات أعلاه لضمان الدقة
+            </div>
             
             <div class="form-group">
                 <label>إضافة مقاس جديد:</label>
