@@ -143,7 +143,10 @@ if (typeof window !== 'undefined' && window.salla) {
         button.style.transform = 'scale(1)';
       });
 
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
         this.openSizeChartModal(chartData);
       });
 
@@ -485,7 +488,9 @@ if (typeof window !== 'undefined' && window.salla) {
       const tabContents = modal.querySelectorAll('.miqasi-tab-content');
       
       tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           const targetTab = button.getAttribute('data-tab');
           
           // Update button styles
@@ -515,7 +520,9 @@ if (typeof window !== 'undefined' && window.salla) {
       // Size recommendation calculation
       const calculateBtn = modal.querySelector('#miqasi-calculate-btn');
       if (calculateBtn) {
-        calculateBtn.addEventListener('click', () => {
+        calculateBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           const height = parseFloat(modal.querySelector('#miqasi-height').value);
           const weight = parseFloat(modal.querySelector('#miqasi-weight').value);
           const age = parseInt(modal.querySelector('#miqasi-age').value);
@@ -630,8 +637,13 @@ if (typeof window !== 'undefined' && window.salla) {
         }, 200);
       };
 
-      closeBtn.addEventListener('click', closeModal);
+      closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
       modal.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (e.target === modal) closeModal();
       });
 
