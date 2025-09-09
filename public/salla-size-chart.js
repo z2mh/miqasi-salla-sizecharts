@@ -568,44 +568,55 @@ if (typeof window !== 'undefined' && window.salla) {
           return 'غير محدد';
         }
         
-        let sizeIndex = 0; // Default to smallest size
+        // Start with base size calculation using BMI
+        let baseSize = 0;
         
-        // Height-based adjustments
-        if (height < 160) {
-          sizeIndex = 0; // Smaller sizes for shorter people
-        } else if (height > 180) {
-          sizeIndex = Math.min(sizes.length - 1, 2); // Larger sizes for taller people
-        } else {
-          sizeIndex = Math.floor(sizes.length / 2); // Middle size for average height
-        }
-        
-        // BMI-based adjustments
+        // BMI-based base size (most important factor)
         switch (bmiCategory) {
-          case 'underweight':
-            sizeIndex = Math.max(0, sizeIndex - 1);
+          case 'underweight': // BMI < 18.5
+            baseSize = 0; // Start with smallest size
             break;
-          case 'overweight':
-            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+          case 'normal': // BMI 18.5-25
+            baseSize = Math.floor(sizes.length / 2); // Start with medium size
             break;
-          case 'obese':
-            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 2);
+          case 'overweight': // BMI 25-30
+            baseSize = Math.max(1, Math.floor(sizes.length * 0.7)); // Upper-medium size
+            break;
+          case 'obese': // BMI > 30
+            baseSize = Math.max(2, sizes.length - 1); // Largest size
             break;
         }
         
-        // Body type adjustments
+        let finalSize = baseSize;
+        
+        // Height adjustments (secondary factor)
+        if (height < 160) {
+          finalSize = Math.max(0, finalSize - 1); // Smaller for short height
+        } else if (height > 185) {
+          finalSize = Math.min(sizes.length - 1, finalSize + 1); // Larger for tall height
+        }
+        // Height 160-185 = no adjustment (average)
+        
+        // Body type adjustments (final factor)
         switch (bodyType) {
-          case 'slim':
-            sizeIndex = Math.max(0, sizeIndex - 1);
+          case 'slim': // نحيف
+            finalSize = Math.max(0, finalSize - 1); // Go smaller
             break;
-          case 'broad':
-            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+          case 'average': // متوسط  
+            // No adjustment
             break;
-          case 'athletic':
-            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+          case 'athletic': // رياضي
+            finalSize = Math.min(sizes.length - 1, finalSize + 1); // Go larger (muscle mass)
+            break;
+          case 'broad': // عريض
+            finalSize = Math.min(sizes.length - 1, finalSize + 1); // Go larger
             break;
         }
         
-        return sizes[sizeIndex] || sizes[0];
+        // Ensure we stay within bounds
+        finalSize = Math.max(0, Math.min(sizes.length - 1, finalSize));
+        
+        return sizes[finalSize];
       }
 
       // Enhanced close functionality
