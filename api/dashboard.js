@@ -217,6 +217,44 @@ export default function handler(req, res) {
             </div>
         </div>
         
+        <div class="card" id="chart-editor" style="display: none;">
+            <h2>📏 إنشاء جدول المقاسات</h2>
+            <div id="message-area"></div>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                <strong style="color: #856404;">⚠️ تأكد من دقة القياسات:</strong> استخدم الصورة التوضيحية والتعليمات أدناه لضمان الدقة
+            </div>
+            
+            <div class="form-group">
+                <label>إضافة مقاس جديد:</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 10px; align-items: end;">
+                    <input type="text" id="size-name" placeholder="المقاس (مثال: S)">
+                    <input type="number" id="chest-size" placeholder="الصدر (سم)">
+                    <input type="number" id="waist-size" placeholder="الخصر (سم)">
+                    <input type="number" id="length-size" placeholder="الطول (سم)">
+                    <button type="button" class="btn" id="add-size-btn">إضافة</button>
+                </div>
+            </div>
+            
+            <table class="size-table" id="sizes-table">
+                <thead>
+                    <tr>
+                        <th>المقاس</th>
+                        <th>الصدر (سم)</th>
+                        <th>الخصر (سم)</th>
+                        <th>الطول (سم)</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="sizes-tbody">
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn" id="save-chart-btn">💾 حفظ جدول المقاسات</button>
+            </div>
+        </div>
+        
         <div class="card" style="display: grid; grid-template-columns: 1fr 400px; gap: 30px;">
             <!-- Instructions Panel -->
             <div>
@@ -246,8 +284,12 @@ export default function handler(req, res) {
                 <div style="text-align: center;">
                     <h3 style="color: #856404; font-size: 1.3rem; margin-bottom: 20px;">📐 دليل أخذ القياسات</h3>
                     
-                    <!-- Measurement Image Placeholder -->
-                    <div style="padding: 40px; background: #f0f0f0; border: 2px dashed #ccc; border-radius: 10px; color: #666; margin-bottom: 20px;">
+                    <!-- Measurement Image -->
+                    <img src="/images/measurement-guide.jpg" 
+                         alt="دليل القياسات" 
+                         style="width: 100%; max-width: 300px; border: 2px solid #ffeaa7; border-radius: 10px; margin-bottom: 20px;"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div style="display: none; padding: 40px; background: #f0f0f0; border: 2px dashed #ccc; border-radius: 10px; color: #666; margin-bottom: 20px;">
                         📷 ضع صورة دليل القياسات هنا<br>
                         <small>(measurement-guide.jpg)</small>
                     </div>
@@ -282,44 +324,6 @@ export default function handler(req, res) {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <div class="card" id="chart-editor" style="display: none;">
-            <h2>📏 إنشاء جدول المقاسات</h2>
-            <div id="message-area"></div>
-            
-            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                <strong style="color: #856404;">⚠️ تأكد من دقة القياسات:</strong> استخدم الصورة التوضيحية والتعليمات أعلاه لضمان الدقة
-            </div>
-            
-            <div class="form-group">
-                <label>إضافة مقاس جديد:</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 10px; align-items: end;">
-                    <input type="text" id="size-name" placeholder="المقاس (مثال: S)">
-                    <input type="number" id="chest-size" placeholder="الصدر (سم)">
-                    <input type="number" id="waist-size" placeholder="الخصر (سم)">
-                    <input type="number" id="length-size" placeholder="الطول (سم)">
-                    <button type="button" class="btn" id="add-size-btn">إضافة</button>
-                </div>
-            </div>
-            
-            <table class="size-table" id="sizes-table">
-                <thead>
-                    <tr>
-                        <th>المقاس</th>
-                        <th>الصدر (سم)</th>
-                        <th>الخصر (سم)</th>
-                        <th>الطول (سم)</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="sizes-tbody">
-                </tbody>
-            </table>
-            
-            <div style="margin-top: 30px;">
-                <button class="btn" id="save-chart-btn">💾 حفظ جدول المقاسات</button>
             </div>
         </div>
     </div>
