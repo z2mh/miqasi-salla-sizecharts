@@ -110,32 +110,37 @@ if (typeof window !== 'undefined' && window.salla) {
       button.className = 'btn btn-outline-primary';
       button.innerHTML = '📏 دليل المقاسات';
       button.style.cssText = `
-        background: #000000;
-        color: white;
-        border: 1px solid #000000;
-        padding: 12px 24px;
-        border-radius: 6px;
-        font-size: 16px;
-        font-weight: 600;
+        background: transparent;
+        color: #000000;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 700;
+        font-style: italic;
         cursor: pointer;
-        width: 100%;
-        max-width: 300px;
-        transition: all 0.3s ease;
-        margin: 15px 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: auto;
+        max-width: none;
+        transition: all 0.2s ease;
+        margin: 10px 0;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        box-shadow: none;
       `;
       
       // Add hover effect
       button.addEventListener('mouseenter', () => {
-        button.style.background = '#333333';
-        button.style.transform = 'translateY(-1px)';
-        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        button.style.color = '#333333';
+        button.style.textDecoration = 'underline';
+        button.style.textDecorationThickness = '2px';
+        button.style.transform = 'scale(1.02)';
       });
       
       button.addEventListener('mouseleave', () => {
-        button.style.background = '#000000';
-        button.style.transform = 'translateY(0)';
-        button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        button.style.color = '#000000';
+        button.style.textDecoration = 'underline';
+        button.style.textDecorationThickness = '1px';
+        button.style.transform = 'scale(1)';
       });
 
       button.addEventListener('click', () => {
@@ -222,7 +227,7 @@ if (typeof window !== 'undefined' && window.salla) {
                 justify-content: center;
                 transition: all 0.2s ease;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-              " onmouseover="this.style.background='#333333'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='#000000'; this.style.transform='scale(1)'"
+              " onmouseover="this.style.background='#333333'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='#000000'; this.style.transform='scale(1)'">
                 ✕
               </button>
             </div>
@@ -255,35 +260,54 @@ if (typeof window !== 'undefined' && window.salla) {
                 📏 كيفية أخذ القياسات بدقة
               </h3>
               
-              <!-- Measurement Image -->
-              <div style="text-align: center; margin: 20px 0;">
-                <img src="https://trynashr.com/images/measurement-guide.jpg" 
-                     alt="دليل القياسات" 
-                     style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div style="display: none; padding: 40px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; color: #666;">
-                  📷 صورة دليل القياسات<br>
-                  <small>قم بتحميل الصورة في مجلد /images/</small>
+              <!-- Image and Instructions Side by Side -->
+              <div style="display: flex; gap: 25px; align-items: flex-start; margin: 20px 0;">
+                
+                <!-- Measurement Image (Left Side) -->
+                <div style="flex: 0 0 250px;">
+                  <img src="https://trynashr.com/images/measurement-guide.jpg" 
+                       alt="دليل القياسات" 
+                       style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                  <div style="display: none; padding: 20px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; color: #666; text-align: center;">
+                    📷 صورة دليل القياسات<br>
+                    <small>قم بتحميل الصورة في مجلد /images/</small>
+                  </div>
                 </div>
+                
+                <!-- Arabic Instructions (Right Side) -->
+                <div style="flex: 1; text-align: right; line-height: 1.8;">
+                  <div style="margin-bottom: 15px;">
+                    <strong style="color: #000000;">الصدر:</strong>
+                    <span style="color: #333333;">قس حول أوسع جزء من الصدر تحت الإبطين. تأكد من إبقاء شريط القياس مستوياً عبر الظهر ومريحاً.</span>
+                  </div>
+                  
+                  <div style="margin-bottom: 15px;">
+                    <strong style="color: #000000;">الخصر:</strong>
+                    <span style="color: #333333;">قس حول الخصر الطبيعي باستخدام شريط قياس.</span>
+                  </div>
+                  
+                  <div style="margin-bottom: 15px;">
+                    <strong style="color: #000000;">الطول:</strong>
+                    <span style="color: #333333;">قس من أعلى الكتف إلى النقطة المرغوبة للطول.</span>
+                  </div>
+                </div>
+                
               </div>
               
-              <!-- Arabic Instructions -->
-              <div style="text-align: right; line-height: 1.8;">
-                <div style="margin-bottom: 15px;">
-                  <strong style="color: #000000;">الصدر:</strong>
-                  <span style="color: #333333;">قس حول أوسع جزء من الصدر تحت الإبطين. تأكد من إبقاء شريط القياس مستوياً عبر الظهر ومريحاً.</span>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                  <strong style="color: #000000;">الخصر:</strong>
-                  <span style="color: #333333;">قس حول الخصر الطبيعي باستخدام شريط قياس.</span>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                  <strong style="color: #000000;">الطول:</strong>
-                  <span style="color: #333333;">قس من أعلى الكتف إلى النقطة المرغوبة للطول.</span>
-                </div>
-              </div>
+              <!-- Mobile Responsive: Stack vertically on small screens -->
+              <style>
+                @media (max-width: 600px) {
+                  .measurement-container {
+                    flex-direction: column !important;
+                  }
+                  .measurement-image {
+                    flex: none !important;
+                    max-width: 200px !important;
+                    margin: 0 auto !important;
+                  }
+                }
+              </style>
               
               <div style="
                 background: #fff3cd;
