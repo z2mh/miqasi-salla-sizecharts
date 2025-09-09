@@ -9,7 +9,7 @@ if (typeof window !== 'undefined' && window.salla) {
   class SallaSizeChart extends HTMLElement {
     constructor() {
       super();
-      this.apiBase = 'https://app.trynashr.com/api'; // Keep APIs on subdomain
+      this.apiBase = 'https://trynashr.com/api'; // Use main domain to avoid CORS
     }
 
     connectedCallback() {
