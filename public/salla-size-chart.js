@@ -53,6 +53,7 @@ if (typeof window !== 'undefined' && window.salla) {
         loading.style.display = 'none';
 
         if (data.success && data.data) {
+          console.log('Miqasi: Size chart data received:', JSON.stringify(data.data, null, 2));
           this.renderSizeChartButton(data.data);
         } else {
           console.log('Miqasi: No size chart found for this product');
@@ -132,6 +133,9 @@ if (typeof window !== 'undefined' && window.salla) {
     }
 
     openSizeChartModal(chartData) {
+      console.log('Miqasi: Opening modal with chart data:', JSON.stringify(chartData, null, 2));
+      console.log('Miqasi: Available sizes:', Object.keys(chartData.sizes || {}));
+      
       // Create beautiful modal overlay
       const modal = document.createElement('div');
       modal.className = 'miqasi-modal-overlay';
