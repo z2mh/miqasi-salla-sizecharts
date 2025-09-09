@@ -44,7 +44,7 @@ if (typeof window !== 'undefined' && window.salla) {
           return;
         }
 
-        console.log('Miqasi: Loading size chart for product:', productId);
+        // Loading size chart for product
 
         // Check for size chart data
         const response = await fetch(`${this.apiBase}/chart-data?store_id=${storeId}&product_id=${productId}`);
@@ -53,7 +53,7 @@ if (typeof window !== 'undefined' && window.salla) {
         loading.style.display = 'none';
 
         if (data.success && data.data) {
-          console.log('Miqasi: Size chart data received:', JSON.stringify(data.data, null, 2));
+          // Size chart data received successfully
           this.renderSizeChartButton(data.data);
         } else {
           console.log('Miqasi: No size chart found for this product');

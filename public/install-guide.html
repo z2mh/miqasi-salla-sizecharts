@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل تثبيت مقاسي - Miqasi Size Chart Installation Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .step h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            margin: 15px 0;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+        .warning {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .demo {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .demo-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .contact {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span style="font-size: 40px;">📏</span>
+            دليل تثبيت تطبيق مقاسي
+        </h1>
+        
+        <p style="text-align: center; font-size: 18px; color: #7f8c8d;">
+            تطبيق مقاسي يساعد عملائك في اختيار المقاس المناسب بسهولة
+        </p>
+
+        <div class="step">
+            <h3>🎯 الخطوة الأولى: افتح صفحة المنتج</h3>
+            <p>انتقل إلى أي صفحة منتج في متجرك على سلة</p>
+        </div>
+
+        <div class="step">
+            <h3>⚡ الخطوة الثانية: افتح أدوات المطور</h3>
+            <p>اضغط <strong>F12</strong> أو انقر بالزر الأيمن واختر "فحص العنصر"</p>
+            <p>اذهب إلى تبويب <strong>Console</strong></p>
+        </div>
+
+        <div class="step">
+            <h3>📝 الخطوة الثالثة: انسخ والصق الكود</h3>
+            <p>انسخ هذا الكود والصقه في وحدة التحكم (Console):</p>
+            <div class="code">
+                <button class="copy-btn" onclick="copyCode()">نسخ</button>
+const script = document.createElement('script');
+script.src = 'https://trynashr.com/widget.js';
+document.head.appendChild(script);
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>✨ الخطوة الرابعة: اضغط Enter</h3>
+            <p>اضغط Enter لتشغيل الكود</p>
+        </div>
+
+        <div class="success">
+            <strong>🎉 تهانينا!</strong> ستظهر أيقونة "دليل المقاسات" تلقائياً في صفحة المنتج
+        </div>
+
+        <div class="demo">
+            <h3>🧪 جرب العرض التوضيحي</h3>
+            <button class="demo-btn" onclick="loadDemo()">📏 عرض دليل المقاسات</button>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ ملاحظة مهمة:</strong> هذا الحل مؤقت لأغراض التجربة. سنعمل على إضافة التثبيت التلقائي قريباً.
+        </div>
+
+        <div class="contact">
+            <h4>🤝 هل تحتاج مساعدة؟</h4>
+            <p>تواصل معنا عبر البريد الإلكتروني أو الواتساب للحصول على الدعم الفني</p>
+            <p><strong>البريد الإلكتروني:</strong> support@trynashr.com</p>
+        </div>
+    </div>
+
+    <script>
+        function copyCode() {
+            const code = `const script = document.createElement('script');
+script.src = 'https://trynashr.com/widget.js';
+document.head.appendChild(script);`;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'تم النسخ ✓';
+                btn.style.background = '#27ae60';
+                setTimeout(() => {
+                    btn.textContent = 'نسخ';
+                    btn.style.background = '#3498db';
+                }, 2000);
+            });
+        }
+
+        function loadDemo() {
+            // Demo size chart data
+            const demoData = {
+                store_id: "demo",
+                product_id: "demo",
+                sizes: {
+                    "S": { chest: 88, waist: 76, length: 68 },
+                    "M": { chest: 94, waist: 82, length: 72 },
+                    "L": { chest: 100, waist: 88, length: 76 },
+                    "XL": { chest: 106, waist: 94, length: 80 }
+                },
+                unit: "cm"
+            };
+
+            showDemoModal(demoData);
+        }
+
+        function showDemoModal(chartData) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.85); z-index: 999999; display: flex;
+                align-items: center; justify-content: center; padding: 20px;
+                backdrop-filter: blur(5px);
+            `;
+
+            let sizeRows = '';
+            Object.keys(chartData.sizes).forEach(size => {
+                const measurements = chartData.sizes[size];
+                sizeRows += `
+                    <tr>
+                        <td style="padding: 15px; text-align: center; font-weight: 700; background: #f8f9ff; border: 1px solid #ddd;">${size}</td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;">${measurements.chest} سم</td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;">${measurements.waist} سم</td>
+                        <td style="padding: 15px; text-align: center; border: 1px solid #ddd;">${measurements.length} سم</td>
+                    </tr>
+                `;
+            });
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 15px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                    <div style="padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                            <h3 style="margin: 0; color: #333; display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 24px;">📏</span>
+                                دليل المقاسات التوضيحي
+                            </h3>
+                            <button onclick="document.body.removeChild(this.closest('div').parentElement)" style="background: #e74c3c; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">&times;</button>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <th style="padding: 15px; text-align: center;">المقاس</th>
+                                    <th style="padding: 15px; text-align: center;">الصدر</th>
+                                    <th style="padding: 15px; text-align: center;">الخصر</th>
+                                    <th style="padding: 15px; text-align: center;">الطول</th>
+                                </tr>
+                            </thead>
+                            <tbody>${sizeRows}</tbody>
+                        </table>
+                        <div style="background: #e8f6f3; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                            <strong>💡 هذا مجرد عرض توضيحي</strong><br>
+                            البيانات الفعلية ستأتي من إعدادات المنتج في متجرك
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+    </script>
+</body>
+</html>
