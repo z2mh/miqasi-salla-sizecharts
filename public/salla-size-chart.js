@@ -435,7 +435,7 @@ if (typeof window !== 'undefined' && window.salla) {
                   <div id="miqasi-recommended-size" style="
                     font-size: 24px; font-weight: 700; color: #1b5e20; margin: 10px 0;
                   "></div>
-                  <div id="miqasi-bmi-info" style="
+                  <div id="miqasi-size-confidence" style="
                     font-size: 14px; color: #388e3c; margin-top: 10px;
                   "></div>
                 </div>
@@ -551,10 +551,10 @@ if (typeof window !== 'undefined' && window.salla) {
           // Show results
           const resultDiv = modal.querySelector('#miqasi-recommendation-result');
           const sizeDiv = modal.querySelector('#miqasi-recommended-size');
-          const bmiDiv = modal.querySelector('#miqasi-bmi-info');
+          const confidenceDiv = modal.querySelector('#miqasi-size-confidence');
           
           sizeDiv.textContent = recommendedSize;
-          bmiDiv.innerHTML = \`مؤشر كتلة الجسم: \${bmi.toFixed(1)} (\${bmiCategory})\`;
+          confidenceDiv.innerHTML = 'هذه التوصية تعتمد على الطول والوزن ونوع الجسم المدخل';
           
           resultDiv.style.display = 'block';
         });
