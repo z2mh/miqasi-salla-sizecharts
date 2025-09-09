@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('📊 CHART-DATA API Called:', {
+    console.log('📊 CHART-DATA API Called (v2):', {
       method: req.method,
       query: req.query,
       body: req.body,
