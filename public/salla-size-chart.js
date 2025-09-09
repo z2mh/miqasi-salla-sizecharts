@@ -110,19 +110,33 @@ if (typeof window !== 'undefined' && window.salla) {
       button.className = 'btn btn-outline-primary';
       button.innerHTML = '📏 دليل المقاسات';
       button.style.cssText = `
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #000000;
         color: white;
-        border: none;
+        border: 1px solid #000000;
         padding: 12px 24px;
-        border-radius: 8px;
+        border-radius: 6px;
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
         width: 100%;
         max-width: 300px;
-        transition: transform 0.2s;
+        transition: all 0.3s ease;
         margin: 15px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       `;
+      
+      // Add hover effect
+      button.addEventListener('mouseenter', () => {
+        button.style.background = '#333333';
+        button.style.transform = 'translateY(-1px)';
+        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+      });
+      
+      button.addEventListener('mouseleave', () => {
+        button.style.background = '#000000';
+        button.style.transform = 'translateY(0)';
+        button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+      });
 
       button.addEventListener('click', () => {
         this.openSizeChartModal(chartData);
@@ -174,40 +188,41 @@ if (typeof window !== 'undefined' && window.salla) {
 
       modal.innerHTML = `
         <div style="
-          background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-          border-radius: 20px;
-          max-width: 650px;
+          background: #ffffff;
+          border: 2px solid #000000;
+          border-radius: 12px;
+          max-width: 750px;
           width: 100%;
           max-height: 90vh;
           overflow-y: auto;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
           animation: slideUp 0.4s ease-out;
           position: relative;
         ">
           <div style="padding: 35px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #f1f5f9;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #000000;">
               <div>
-                <h2 style="color: #1e293b; font-size: 28px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+                <h2 style="color: #000000; font-size: 28px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 12px;">
                   <span style="font-size: 32px;">📏</span>
                   دليل المقاسات
                 </h2>
-                <p style="color: #64748b; margin: 8px 0 0 44px; font-size: 14px;">اختر المقاس المناسب لك</p>
+                <p style="color: #666666; margin: 8px 0 0 44px; font-size: 14px;">اختر المقاس المناسب لك</p>
               </div>
               <button class="miqasi-close-btn" style="
-                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                background: #000000;
                 color: white;
-                border: none;
+                border: 1px solid #000000;
                 width: 44px;
                 height: 44px;
-                border-radius: 50%;
+                border-radius: 6px;
                 font-size: 20px;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 transition: all 0.2s ease;
-                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-              " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(239, 68, 68, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)'">
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+              " onmouseover="this.style.background='#333333'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='#000000'; this.style.transform='scale(1)'"
                 ✕
               </button>
             </div>
@@ -215,7 +230,7 @@ if (typeof window !== 'undefined' && window.salla) {
             <div style="overflow-x: auto; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
               <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;">
                 <thead>
-                  <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <tr style="background: #000000;">
                     <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">المقاس</th>
                     <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">الصدر</th>
                     <th style="padding: 18px 12px; text-align: center; color: white; font-weight: 600; font-size: 16px; border: none;">الخصر</th>
@@ -228,21 +243,60 @@ if (typeof window !== 'undefined' && window.salla) {
               </table>
             </div>
             
+            <!-- Measurement Guide Section -->
             <div style="
-              background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-              padding: 20px;
-              border-radius: 12px;
-              border-right: 4px solid #0ea5e9;
-              box-shadow: 0 2px 8px rgba(14, 165, 233, 0.1);
+              background: #f8f8f8;
+              padding: 25px;
+              border-radius: 8px;
+              border: 1px solid #e0e0e0;
+              margin-bottom: 20px;
             ">
-              <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <span style="font-size: 20px; margin-top: 2px;">💡</span>
-                <div>
-                  <p style="margin: 0; color: #0c4a6e; font-weight: 600; font-size: 15px; margin-bottom: 4px;">ملاحظة مهمة:</p>
-                  <p style="margin: 0; color: #0369a1; font-size: 14px; line-height: 1.6;">
-                    جميع القياسات بالسنتيمتر. للحصول على أفضل النتائج، قم بقياس الجسم مباشرة باستخدام شريط القياس.
-                  </p>
+              <h3 style="color: #000000; font-size: 18px; margin: 0 0 15px 0; font-weight: 600; text-align: center;">
+                📏 كيفية أخذ القياسات بدقة
+              </h3>
+              
+              <!-- Measurement Image -->
+              <div style="text-align: center; margin: 20px 0;">
+                <img src="https://trynashr.com/images/measurement-guide.jpg" 
+                     alt="دليل القياسات" 
+                     style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; padding: 40px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; color: #666;">
+                  📷 صورة دليل القياسات<br>
+                  <small>قم بتحميل الصورة في مجلد /images/</small>
                 </div>
+              </div>
+              
+              <!-- Arabic Instructions -->
+              <div style="text-align: right; line-height: 1.8;">
+                <div style="margin-bottom: 15px;">
+                  <strong style="color: #000000;">الصدر:</strong>
+                  <span style="color: #333333;">قس حول أوسع جزء من الصدر تحت الإبطين. تأكد من إبقاء شريط القياس مستوياً عبر الظهر ومريحاً.</span>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                  <strong style="color: #000000;">الخصر:</strong>
+                  <span style="color: #333333;">قس حول الخصر الطبيعي باستخدام شريط قياس.</span>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                  <strong style="color: #000000;">الطول:</strong>
+                  <span style="color: #333333;">قس من أعلى الكتف إلى النقطة المرغوبة للطول.</span>
+                </div>
+              </div>
+              
+              <div style="
+                background: #fff3cd;
+                border: 1px solid #ffeaa7;
+                padding: 12px;
+                border-radius: 6px;
+                margin-top: 15px;
+                text-align: center;
+              ">
+                <strong style="color: #856404;">💡 نصيحة:</strong>
+                <span style="color: #856404; font-size: 14px;">
+                  جميع القياسات بالسنتيمتر. للحصول على أفضل النتائج، استعن بشخص آخر لأخذ القياسات.
+                </span>
               </div>
             </div>
           </div>
