@@ -65,25 +65,29 @@ if (typeof window !== 'undefined' && window.salla) {
     }
 
     getProductId() {
-      // Try multiple methods to get product ID
+      console.log('Miqasi: Detecting product ID from URL:', window.location.pathname);
       
-      // Method 1: From Salla's global product object
-      if (window.salla && window.salla.product && window.salla.product.id) {
-        return window.salla.product.id.toString();
-      }
-
-      // Method 2: From URL
+      // Method 1: From URL pattern /p123456 at the end
       const urlMatch = window.location.pathname.match(/\/p(\d+)$/);
       if (urlMatch) {
+        console.log('Miqasi: Product ID found in URL:', urlMatch[1]);
         return urlMatch[1];
+      }
+
+      // Method 2: From Salla's global product object
+      if (window.salla && window.salla.product && window.salla.product.id) {
+        console.log('Miqasi: Product ID found in Salla object:', window.salla.product.id);
+        return window.salla.product.id.toString();
       }
 
       // Method 3: From element attribute
       const productEl = document.querySelector('[data-product-id]');
       if (productEl) {
+        console.log('Miqasi: Product ID found in data attribute:', productEl.dataset.productId);
         return productEl.dataset.productId;
       }
 
+      console.log('Miqasi: No product ID found - not a product page');
       return null;
     }
 
@@ -227,33 +231,55 @@ if (typeof window !== 'undefined' && window.salla) {
 
   // Auto-initialize on product pages
   function initSizeChart() {
-    // Check if we're on a product page
-    const isProductPage = !!(
-      window.salla?.product?.id ||
-      window.location.pathname.match(/\/p\d+$/) ||
-      document.querySelector('[data-product-id]')
-    );
+    console.log('Miqasi: Checking if this is a product page...');
+    console.log('Miqasi: Current URL:', window.location.pathname);
+    
+    // Enhanced product page detection
+    const urlHasProductId = /\/p(\d+)$/.test(window.location.pathname);
+    const sallaHasProduct = !!(window.salla?.product?.id);
+    const hasProductElement = !!document.querySelector('[data-product-id]');
+    
+    console.log('Miqasi: Product page checks:', {
+      urlHasProductId,
+      sallaHasProduct,
+      hasProductElement
+    });
+    
+    const isProductPage = urlHasProductId || sallaHasProduct || hasProductElement;
+    
+    if (!isProductPage) {
+      console.log('Miqasi: Not a product page, skipping initialization');
+      return;
+    }
 
-    if (isProductPage) {
-      // Look for a place to insert the size chart
-      const insertionPoints = [
-        '.product-price',
-        '.price',
-        '.product-actions',
-        '.add-to-cart',
-        'salla-product-options'
-      ];
+    console.log('Miqasi: Product page detected, looking for insertion point...');
 
-      for (const selector of insertionPoints) {
-        const element = document.querySelector(selector);
-        if (element && !document.querySelector('salla-size-chart')) {
-          const sizeChart = document.createElement('salla-size-chart');
-          element.parentNode.insertBefore(sizeChart, element.nextSibling);
-          console.log('Miqasi: Size chart component inserted');
-          break;
-        }
+    // Check if component already exists
+    if (document.querySelector('salla-size-chart')) {
+      console.log('Miqasi: Size chart component already exists');
+      return;
+    }
+
+    // Look for a place to insert the size chart
+    const insertionPoints = [
+      '.product-price',
+      '.price',
+      '.product-actions',
+      '.add-to-cart',
+      'salla-product-options'
+    ];
+
+    for (const selector of insertionPoints) {
+      const element = document.querySelector(selector);
+      if (element) {
+        const sizeChart = document.createElement('salla-size-chart');
+        element.parentNode.insertBefore(sizeChart, element.nextSibling);
+        console.log('Miqasi: Size chart component inserted after', selector);
+        return;
       }
     }
+    
+    console.log('Miqasi: No suitable insertion point found');
   }
 
   // Initialize when Salla is ready
