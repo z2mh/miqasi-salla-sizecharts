@@ -182,6 +182,55 @@ export default function handler(req, res) {
             color: #666;
             padding: 20px;
         }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px 10px;
+            }
+            .card {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .header {
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .card[style*="grid-template-columns"] {
+                display: block !important;
+            }
+            .card[style*="grid-template-columns"] > div {
+                margin-bottom: 30px;
+            }
+            .form-group div[style*="grid-template-columns"] {
+                display: block !important;
+            }
+            .form-group div[style*="grid-template-columns"] > * {
+                margin-bottom: 10px;
+                width: 100% !important;
+            }
+            .size-table {
+                font-size: 12px;
+            }
+            .size-table th,
+            .size-table td {
+                padding: 8px 4px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .card {
+                padding: 15px;
+            }
+            input, select, button {
+                font-size: 14px;
+            }
+        }
         .success {
             background: #d4edda;
             border: 1px solid #c3e6cb;

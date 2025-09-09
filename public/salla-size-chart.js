@@ -468,6 +468,81 @@ if (typeof window !== 'undefined' && window.salla) {
             transform: scale(1.02);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           }
+          
+          /* Mobile Responsiveness */
+          @media (max-width: 768px) {
+            .miqasi-modal-overlay {
+              padding: 10px !important;
+            }
+            .miqasi-modal-overlay > div {
+              max-width: 100% !important;
+              max-height: 95vh !important;
+            }
+            .miqasi-modal-overlay > div > div {
+              padding: 20px !important;
+            }
+            .miqasi-modal-overlay h2 {
+              font-size: 20px !important;
+            }
+            .miqasi-modal-overlay .miqasi-close-btn {
+              width: 35px !important;
+              height: 35px !important;
+              font-size: 16px !important;
+            }
+            .miqasi-modal-overlay table {
+              font-size: 12px !important;
+            }
+            .miqasi-modal-overlay th,
+            .miqasi-modal-overlay td {
+              padding: 8px 4px !important;
+            }
+            .miqasi-modal-overlay .miqasi-tab-btn {
+              padding: 10px 16px !important;
+              font-size: 12px !important;
+            }
+            .miqasi-modal-overlay div[style*="display: flex"] {
+              flex-direction: column !important;
+              gap: 15px !important;
+            }
+            .miqasi-modal-overlay div[style*="flex: 0 0 250px"] {
+              flex: none !important;
+              max-width: 200px !important;
+              margin: 0 auto !important;
+            }
+            .miqasi-modal-overlay div[style*="display: grid"][style*="grid-template-columns: 1fr 1fr"] {
+              grid-template-columns: 1fr !important;
+              gap: 15px !important;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .miqasi-modal-overlay > div > div {
+              padding: 15px !important;
+            }
+            .miqasi-modal-overlay h2 {
+              font-size: 18px !important;
+            }
+            .miqasi-modal-overlay p {
+              font-size: 12px !important;
+            }
+            .miqasi-modal-overlay table {
+              font-size: 11px !important;
+            }
+            .miqasi-modal-overlay th,
+            .miqasi-modal-overlay td {
+              padding: 6px 2px !important;
+            }
+            .miqasi-modal-overlay input,
+            .miqasi-modal-overlay select,
+            .miqasi-modal-overlay button {
+              font-size: 14px !important;
+              padding: 10px !important;
+            }
+            .miqasi-modal-overlay .miqasi-tab-btn {
+              padding: 8px 12px !important;
+              font-size: 11px !important;
+            }
+          }
         </style>
       `;
 
