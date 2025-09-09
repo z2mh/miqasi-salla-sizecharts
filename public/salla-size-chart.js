@@ -205,7 +205,7 @@ if (typeof window !== 'undefined' && window.salla) {
           position: relative;
         ">
           <div style="padding: 35px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #000000;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #000000;">
               <div>
                 <h2 style="color: #000000; font-size: 28px; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 12px;">
                   <span style="font-size: 32px;">📏</span>
@@ -231,6 +231,23 @@ if (typeof window !== 'undefined' && window.salla) {
                 ✕
               </button>
             </div>
+            
+            <!-- Tab Navigation -->
+            <div style="display: flex; margin-bottom: 25px; border-bottom: 1px solid #e0e0e0;">
+              <button class="miqasi-tab-btn active" data-tab="size-chart" style="
+                background: #000000; color: white; border: none; padding: 12px 24px; 
+                border-radius: 6px 6px 0 0; font-size: 14px; font-weight: 600; cursor: pointer;
+                margin-left: 2px; transition: all 0.2s ease;
+              ">📏 جدول المقاسات</button>
+              <button class="miqasi-tab-btn" data-tab="size-recommendation" style="
+                background: #f8f8f8; color: #666666; border: 1px solid #e0e0e0; padding: 12px 24px; 
+                border-radius: 6px 6px 0 0; font-size: 14px; font-weight: 600; cursor: pointer;
+                border-bottom: none; transition: all 0.2s ease;
+              ">🎯 توصية المقاس</button>
+            </div>
+            
+            <!-- Size Chart Tab Content -->
+            <div id="size-chart-tab" class="miqasi-tab-content">
             
             <div style="overflow-x: auto; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
               <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;">
@@ -323,6 +340,110 @@ if (typeof window !== 'undefined' && window.salla) {
                 </span>
               </div>
             </div>
+            
+            </div> <!-- End Size Chart Tab -->
+            
+            <!-- Size Recommendation Tab Content -->
+            <div id="size-recommendation-tab" class="miqasi-tab-content" style="display: none;">
+              
+              <div style="
+                background: #f8f8f8;
+                padding: 25px;
+                border-radius: 8px;
+                border: 1px solid #e0e0e0;
+                margin-bottom: 20px;
+              ">
+                <h3 style="color: #000000; font-size: 18px; margin: 0 0 20px 0; font-weight: 600; text-align: center;">
+                  🎯 احصل على توصية المقاس المناسب لك
+                </h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                  
+                  <!-- الطول -->
+                  <div>
+                    <label style="display: block; color: #000000; font-weight: 600; margin-bottom: 8px;">
+                      الطول (سم)
+                    </label>
+                    <input type="number" id="miqasi-height" placeholder="مثال: 175" style="
+                      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;
+                      font-size: 14px; box-sizing: border-box;
+                    ">
+                  </div>
+                  
+                  <!-- الوزن -->
+                  <div>
+                    <label style="display: block; color: #000000; font-weight: 600; margin-bottom: 8px;">
+                      الوزن (كغ)
+                    </label>
+                    <input type="number" id="miqasi-weight" placeholder="مثال: 70" style="
+                      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;
+                      font-size: 14px; box-sizing: border-box;
+                    ">
+                  </div>
+                  
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                  
+                  <!-- العمر -->
+                  <div>
+                    <label style="display: block; color: #000000; font-weight: 600; margin-bottom: 8px;">
+                      العمر
+                    </label>
+                    <input type="number" id="miqasi-age" placeholder="مثال: 30" style="
+                      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;
+                      font-size: 14px; box-sizing: border-box;
+                    ">
+                  </div>
+                  
+                  <!-- نوع الجسم -->
+                  <div>
+                    <label style="display: block; color: #000000; font-weight: 600; margin-bottom: 8px;">
+                      نوع الجسم
+                    </label>
+                    <select id="miqasi-body-type" style="
+                      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px;
+                      font-size: 14px; box-sizing: border-box; background: white;
+                    ">
+                      <option value="">اختر نوع الجسم</option>
+                      <option value="slim">نحيف</option>
+                      <option value="athletic">رياضي</option>
+                      <option value="average">متوسط</option>
+                      <option value="broad">عريض</option>
+                    </select>
+                  </div>
+                  
+                </div>
+                
+                <!-- زر الحساب -->
+                <div style="text-align: center; margin-top: 25px;">
+                  <button id="miqasi-calculate-btn" style="
+                    background: #000000; color: white; border: none; padding: 15px 40px;
+                    border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer;
+                    transition: all 0.2s ease;
+                  " onmouseover="this.style.background='#333333'" onmouseout="this.style.background='#000000'">
+                    احسب المقاس المناسب
+                  </button>
+                </div>
+                
+                <!-- نتيجة التوصية -->
+                <div id="miqasi-recommendation-result" style="
+                  display: none; margin-top: 25px; padding: 20px; background: #e8f5e8;
+                  border: 1px solid #4caf50; border-radius: 8px; text-align: center;
+                ">
+                  <h4 style="color: #2e7d32; margin: 0 0 10px 0;">🎉 المقاس المناسب لك:</h4>
+                  <div id="miqasi-recommended-size" style="
+                    font-size: 24px; font-weight: 700; color: #1b5e20; margin: 10px 0;
+                  "></div>
+                  <div id="miqasi-bmi-info" style="
+                    font-size: 14px; color: #388e3c; margin-top: 10px;
+                  "></div>
+                </div>
+                
+              </div>
+              
+            </div> <!-- End Size Recommendation Tab -->
+            
           </div>
         </div>
         
@@ -358,6 +479,134 @@ if (typeof window !== 'undefined' && window.salla) {
       `;
 
       document.body.appendChild(modal);
+      
+      // Tab functionality
+      const tabButtons = modal.querySelectorAll('.miqasi-tab-btn');
+      const tabContents = modal.querySelectorAll('.miqasi-tab-content');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetTab = button.getAttribute('data-tab');
+          
+          // Update button styles
+          tabButtons.forEach(btn => {
+            if (btn === button) {
+              btn.style.background = '#000000';
+              btn.style.color = 'white';
+              btn.classList.add('active');
+            } else {
+              btn.style.background = '#f8f8f8';
+              btn.style.color = '#666666';
+              btn.classList.remove('active');
+            }
+          });
+          
+          // Show/hide tab content
+          tabContents.forEach(content => {
+            if (content.id === targetTab + '-tab') {
+              content.style.display = 'block';
+            } else {
+              content.style.display = 'none';
+            }
+          });
+        });
+      });
+      
+      // Size recommendation calculation
+      const calculateBtn = modal.querySelector('#miqasi-calculate-btn');
+      if (calculateBtn) {
+        calculateBtn.addEventListener('click', () => {
+          const height = parseFloat(modal.querySelector('#miqasi-height').value);
+          const weight = parseFloat(modal.querySelector('#miqasi-weight').value);
+          const age = parseInt(modal.querySelector('#miqasi-age').value);
+          const bodyType = modal.querySelector('#miqasi-body-type').value;
+          
+          if (!height || !weight) {
+            alert('يرجى إدخال الطول والوزن');
+            return;
+          }
+          
+          // Calculate BMI
+          const heightM = height / 100;
+          const bmi = weight / (heightM * heightM);
+          
+          // Size recommendation algorithm
+          let recommendedSize = '';
+          let bmiCategory = '';
+          
+          if (bmi < 18.5) {
+            bmiCategory = 'نقص الوزن';
+            recommendedSize = getSizeForBMI('underweight', height, bodyType);
+          } else if (bmi < 25) {
+            bmiCategory = 'وزن طبيعي';
+            recommendedSize = getSizeForBMI('normal', height, bodyType);
+          } else if (bmi < 30) {
+            bmiCategory = 'زيادة الوزن';
+            recommendedSize = getSizeForBMI('overweight', height, bodyType);
+          } else {
+            bmiCategory = 'سمنة';
+            recommendedSize = getSizeForBMI('obese', height, bodyType);
+          }
+          
+          // Show results
+          const resultDiv = modal.querySelector('#miqasi-recommendation-result');
+          const sizeDiv = modal.querySelector('#miqasi-recommended-size');
+          const bmiDiv = modal.querySelector('#miqasi-bmi-info');
+          
+          sizeDiv.textContent = recommendedSize;
+          bmiDiv.innerHTML = \`مؤشر كتلة الجسم: \${bmi.toFixed(1)} (\${bmiCategory})\`;
+          
+          resultDiv.style.display = 'block';
+        });
+      }
+      
+      // Size calculation helper function
+      function getSizeForBMI(bmiCategory, height, bodyType) {
+        const sizes = Object.keys(chartData.sizes || {}).sort();
+        
+        if (sizes.length === 0) {
+          return 'غير محدد';
+        }
+        
+        let sizeIndex = 0; // Default to smallest size
+        
+        // Height-based adjustments
+        if (height < 160) {
+          sizeIndex = 0; // Smaller sizes for shorter people
+        } else if (height > 180) {
+          sizeIndex = Math.min(sizes.length - 1, 2); // Larger sizes for taller people
+        } else {
+          sizeIndex = Math.floor(sizes.length / 2); // Middle size for average height
+        }
+        
+        // BMI-based adjustments
+        switch (bmiCategory) {
+          case 'underweight':
+            sizeIndex = Math.max(0, sizeIndex - 1);
+            break;
+          case 'overweight':
+            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+            break;
+          case 'obese':
+            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 2);
+            break;
+        }
+        
+        // Body type adjustments
+        switch (bodyType) {
+          case 'slim':
+            sizeIndex = Math.max(0, sizeIndex - 1);
+            break;
+          case 'broad':
+            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+            break;
+          case 'athletic':
+            sizeIndex = Math.min(sizes.length - 1, sizeIndex + 1);
+            break;
+        }
+        
+        return sizes[sizeIndex] || sizes[0];
+      }
 
       // Enhanced close functionality
       const closeBtn = modal.querySelector('.miqasi-close-btn');
