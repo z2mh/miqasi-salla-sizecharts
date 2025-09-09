@@ -1,0 +1,162 @@
+<!-- Miqasi Size Chart Liquid Template -->
+<!-- This can be added directly to Salla themes -->
+
+{% comment %}
+  Usage: Include this in product templates
+  {{ 'miqasi-size-chart' | asset_url | script_tag }}
+  {% include 'miqasi-size-chart' %}
+{% endcomment %}
+
+<div class="miqasi-size-chart-wrapper" data-product-id="{{ product.id }}" data-store-id="{{ store.id }}">
+  <div id="miqasi-size-chart-{{ product.id }}" style="margin: 15px 0;">
+    <!-- Size chart will be loaded here -->
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var MIQASI_CONFIG = {
+    apiBase: 'https://app.trynashr.com/api',
+    productId: '{{ product.id }}',
+    storeId: '{{ store.id }}' || 'demo_store'
+  };
+
+  function loadSizeChart() {
+    var container = document.getElementById('miqasi-size-chart-' + MIQASI_CONFIG.productId);
+    if (!container) return;
+
+    // Create loading indicator
+    container.innerHTML = '<div style="text-align: center; padding: 10px; color: #666;">جاري تحميل دليل المقاسات...</div>';
+
+    // Fetch size chart data
+    fetch(MIQASI_CONFIG.apiBase + '/chart-data?store_id=' + MIQASI_CONFIG.storeId + '&product_id=' + MIQASI_CONFIG.productId)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        if (data.success && data.data) {
+          renderSizeChartButton(container, data.data);
+        } else {
+          container.innerHTML = ''; // Hide if no size chart
+        }
+      })
+      .catch(function(error) {
+        console.error('Miqasi: Error loading size chart:', error);
+        container.innerHTML = ''; // Hide on error
+      });
+  }
+
+  function renderSizeChartButton(container, chartData) {
+    container.innerHTML = [
+      '<button class="btn btn-outline-primary miqasi-size-guide-btn"',
+      ' style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);',
+      ' color: white; border: none; padding: 12px 24px; border-radius: 8px;',
+      ' font-size: 16px; font-weight: 600; cursor: pointer; width: 100%;',
+      ' max-width: 300px; margin: 0 auto; display: block;">',
+      '📏 دليل المقاسات',
+      '</button>'
+    ].join('');
+
+    var button = container.querySelector('.miqasi-size-guide-btn');
+    button.onclick = function() { openSizeChartModal(chartData); };
+  }
+
+  function openSizeChartModal(chartData) {
+    // Build size table rows
+    var rows = '';
+    var sizes = Object.keys(chartData.sizes || {}).sort();
+    for (var i = 0; i < sizes.length; i++) {
+      var size = sizes[i];
+      var measurements = chartData.sizes[size];
+      rows += '<tr>';
+      rows += '<td style="text-align: center; font-weight: bold; background: #f8f9ff; padding: 12px; border: 1px solid #ddd;">' + size + '</td>';
+      rows += '<td style="text-align: center; padding: 12px; border: 1px solid #ddd;">' + (measurements.chest || '-') + ' سم</td>';
+      rows += '<td style="text-align: center; padding: 12px; border: 1px solid #ddd;">' + (measurements.waist || '-') + ' سم</td>';
+      rows += '<td style="text-align: center; padding: 12px; border: 1px solid #ddd;">' + (measurements.length || '-') + ' سم</td>';
+      rows += '</tr>';
+    }
+
+    // Create modal
+    var modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 20px;';
+    modal.innerHTML = [
+      '<div style="background: white; border-radius: 15px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">',
+        '<div style="padding: 30px;">',
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">',
+            '<h3 style="margin: 0; color: #333;">📏 دليل المقاسات</h3>',
+            '<button class="miqasi-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>',
+          '</div>',
+          '<div style="overflow-x: auto;">',
+            '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">',
+              '<thead>',
+                '<tr style="background: #667eea; color: white;">',
+                  '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">المقاس</th>',
+                  '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">الصدر</th>',
+                  '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">الخصر</th>',
+                  '<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">الطول</th>',
+                '</tr>',
+              '</thead>',
+              '<tbody>' + rows + '</tbody>',
+            '</table>',
+          '</div>',
+          '<div style="background: #f8f9ff; padding: 15px; border-radius: 8px; font-size: 14px; color: #666; text-align: center;">',
+            '<strong>💡 ملاحظة:</strong> جميع القياسات بالسنتيمتر. للحصول على أفضل النتائج، قم بقياس الجسم مباشرة.',
+          '</div>',
+        '</div>',
+      '</div>'
+    ].join('');
+
+    document.body.appendChild(modal);
+
+    // Close handlers
+    function closeModal() {
+      if (document.body.contains(modal)) {
+        document.body.removeChild(modal);
+      }
+    }
+
+    modal.querySelector('.miqasi-close').onclick = closeModal;
+    modal.onclick = function(e) {
+      if (e.target === modal) closeModal();
+    };
+
+    var escHandler = function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  }
+
+  // Initialize
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadSizeChart);
+  } else {
+    loadSizeChart();
+  }
+})();
+</script>
+
+<style>
+.miqasi-size-chart-wrapper {
+  margin: 15px 0;
+}
+
+.miqasi-size-guide-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+  .miqasi-size-chart-wrapper {
+    margin: 10px 0;
+  }
+  
+  .miqasi-size-guide-btn {
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+  }
+}
+</style>
