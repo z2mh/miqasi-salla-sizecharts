@@ -9,7 +9,7 @@ if (typeof window !== 'undefined' && window.salla) {
   class SallaSizeChart extends HTMLElement {
     constructor() {
       super();
-      this.apiBase = 'https://trynashr.com/api';
+      this.apiBase = 'https://app.trynashr.com/api';
     }
 
     connectedCallback() {
