@@ -2,6 +2,17 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
+  // Add CORS headers for Salla domains
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   try {
     console.log('📊 CHART-DATA API Called:', {
       method: req.method,
