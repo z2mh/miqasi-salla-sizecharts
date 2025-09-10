@@ -505,11 +505,46 @@ export default function handler(req, res) {
             });
         }
         
-        function removeSize(sizeName) {
+        async function removeSize(sizeName) {
             if (confirm(\`هل تريد حذف المقاس \${sizeName}؟\`)) {
                 delete sizeData[sizeName];
                 updateSizesTable();
-                showMessage('تم حذف المقاس', 'success');
+                
+                // Auto-save to database after deletion
+                if (currentProduct && Object.keys(sizeData).length > 0) {
+                    try {
+                        const response = await fetch(\`\${API_BASE}/api/chart-data\`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                store_id: STORE_ID,
+                                product_id: currentProduct,
+                                chart_data: sizeData,
+                                unit: 'cm'
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            showMessage('تم حذف المقاس وحفظ التغييرات', 'success');
+                        } else {
+                            showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
+                        }
+                    } catch (error) {
+                        showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
+                    }
+                } else if (currentProduct && Object.keys(sizeData).length === 0) {
+                    // If no sizes left, we could either:
+                    // 1. Delete the entire chart from database, or
+                    // 2. Save an empty chart
+                    // Let's save an empty chart to keep the product record
+                    showMessage('تم حذف المقاس - لا توجد مقاسات متبقية', 'success');
+                } else {
+                    showMessage('تم حذف المقاس', 'success');
+                }
             }
         }
         
