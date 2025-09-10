@@ -737,11 +737,6 @@ if (typeof window !== 'undefined' && window.salla) {
     const sallaHasProduct = !!(window.salla?.product?.id);
     const hasProductElement = !!document.querySelector('[data-product-id]');
     
-      urlHasProductId,
-      sallaHasProduct,
-      hasProductElement
-    });
-    
     const isProductPage = urlHasProductId || sallaHasProduct || hasProductElement;
     
     if (!isProductPage) {
@@ -792,4 +787,5 @@ if (typeof window !== 'undefined' && window.salla) {
   }
 
 } else {
+  // Salla object not found - running outside Salla environment
 }
