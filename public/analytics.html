@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحليلات مقاسي - رؤى الأعمال</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            background: #ecf0f1;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 300px 200px 200px 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .controls input, .controls select, .controls button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .sync-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .analytics-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            background: #ecf0f1;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-left: 5px;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .chart-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .size-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .size-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #3498db;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .size-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .size-item .metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .size-item .metric span:first-child {
+            color: #7f8c8d;
+        }
+        
+        .size-item .metric span:last-child {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .recommendations {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-right: 4px solid #f39c12;
+        }
+        
+        .recommendation-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-item p {
+            color: #5d6d7e;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                margin: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 تحليلات مقاسي</h1>
+            <p>رؤى الأعمال والتحليلات المتقدمة لجداول المقاسات</p>
+        </div>
+        
+        <div class="controls">
+            <div class="controls-grid">
+                <input type="text" id="storeId" placeholder="Store ID (مثل: demo_store)" value="demo_store">
+                <input type="text" id="accessToken" placeholder="Access Token">
+                <select id="syncType">
+                    <option value="all">مزامنة جميع البيانات</option>
+                    <option value="products">المنتجات فقط</option>
+                    <option value="orders">الطلبات فقط</option>
+                    <option value="categories">الفئات فقط</option>
+                </select>
+                <select id="reportType">
+                    <option value="all">جميع التقارير</option>
+                    <option value="overview">نظرة عامة</option>
+                    <option value="size_performance">أداء المقاسات</option>
+                    <option value="roi_analysis">تحليل العائد</option>
+                    <option value="trending_sizes">المقاسات الرائجة</option>
+                </select>
+                <div>
+                    <button class="sync-btn" onclick="syncData()">🔄 مزامنة البيانات</button>
+                    <button class="analytics-btn" onclick="loadAnalytics()">📈 عرض التحليلات</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="message"></div>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('overview')">📊 نظرة عامة</button>
+                <button class="tab" onclick="showTab('performance')">🎯 أداء المقاسات</button>
+                <button class="tab" onclick="showTab('trends')">📈 المقاسات الرائجة</button>
+                <button class="tab" onclick="showTab('roi')">💰 تحليل العائد</button>
+                <button class="tab" onclick="showTab('recommendations')">💡 التوصيات</button>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="stats-grid" id="overviewStats">
+                    <div class="loading">اضغط "عرض التحليلات" لرؤية البيانات</div>
+                </div>
+            </div>
+            
+            <!-- Performance Tab -->
+            <div id="performance" class="tab-content">
+                <div id="performanceContent">
+                    <div class="loading">اضغط "عرض التحليلات" لرؤية أداء المقاسات</div>
+                </div>
+            </div>
+            
+            <!-- Trends Tab -->
+            <div id="trends" class="tab-content">
+                <div id="trendsContent">
+                    <div class="loading">اضغط "عرض التحليلات" لرؤية المقاسات الرائجة</div>
+                </div>
+            </div>
+            
+            <!-- ROI Tab -->
+            <div id="roi" class="tab-content">
+                <div id="roiContent">
+                    <div class="loading">اضغط "عرض التحليلات" لرؤية تحليل العائد</div>
+                </div>
+            </div>
+            
+            <!-- Recommendations Tab -->
+            <div id="recommendations" class="tab-content">
+                <div id="recommendationsContent">
+                    <div class="loading">اضغط "عرض التحليلات" لرؤية التوصيات</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 5000);
+        }
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        async function syncData() {
+            const storeId = document.getElementById('storeId').value;
+            const accessToken = document.getElementById('accessToken').value;
+            const syncType = document.getElementById('syncType').value;
+            
+            if (!storeId) {
+                showMessage('يرجى إدخال Store ID', 'error');
+                return;
+            }
+            
+            if (!accessToken) {
+                showMessage('يرجى إدخال Access Token', 'error');
+                return;
+            }
+            
+            showMessage('جاري مزامنة البيانات...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sync-data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        store_id: storeId,
+                        access_token: accessToken,
+                        sync_type: syncType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(`تمت المزامنة بنجاح! النتائج: ${JSON.stringify(data.results)}`, 'success');
+                } else {
+                    showMessage(`فشلت المزامنة: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`خطأ في الاتصال: ${error.message}`, 'error');
+            }
+        }
+        
+        async function loadAnalytics() {
+            const storeId = document.getElementById('storeId').value;
+            const reportType = document.getElementById('reportType').value;
+            
+            if (!storeId) {
+                showMessage('يرجى إدخال Store ID', 'error');
+                return;
+            }
+            
+            showMessage('جاري تحميل التحليلات...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/analytics?store_id=${storeId}&report_type=${reportType}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAnalytics(data.data);
+                    showMessage('تم تحميل التحليلات بنجاح!', 'success');
+                } else {
+                    showMessage(`فشل تحميل التحليلات: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`خطأ في الاتصال: ${error.message}`, 'error');
+            }
+        }
+        
+        function displayAnalytics(data) {
+            // Display Overview
+            if (data.overview) {
+                const overviewHTML = `
+                    <div class="stat-card">
+                        <h3>${data.overview.total_products_with_charts}</h3>
+                        <p>منتجات مع جداول مقاسات</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${data.overview.total_sizes_created}</h3>
+                        <p>إجمالي المقاسات المضافة</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${data.overview.avg_sizes_per_product}</h3>
+                        <p>متوسط المقاسات لكل منتج</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${data.overview.categories_with_charts}</h3>
+                        <p>فئات تحتوي على جداول مقاسات</p>
+                    </div>
+                `;
+                document.getElementById('overviewStats').innerHTML = overviewHTML;
+            }
+            
+            // Display Size Performance
+            if (data.size_performance) {
+                let performanceHTML = '<div class="chart-container">';
+                performanceHTML += '<h3 class="chart-title">أداء المقاسات حسب المنتج</h3>';
+                
+                data.size_performance.forEach(product => {
+                    performanceHTML += `
+                        <div class="chart-container">
+                            <h4>${product.product_name}</h4>
+                            <p><strong>إجمالي الطلبات:</strong> ${product.total_orders} | <strong>إجمالي الإيرادات:</strong> ${product.total_revenue} ريال</p>
+                            <p><strong>أشهر مقاس:</strong> ${product.most_popular_size} | <strong>متوسط قيمة الطلب:</strong> ${product.avg_order_value} ريال</p>
+                            <div class="size-breakdown">
+                    `;
+                    
+                    product.size_breakdown.forEach(size => {
+                        performanceHTML += `
+                            <div class="size-item">
+                                <h4>مقاس ${size.size}</h4>
+                                <div class="metric"><span>الطلبات:</span><span>${size.orders}</span></div>
+                                <div class="metric"><span>الإيراد:</span><span>${size.revenue} ريال</span></div>
+                                <div class="metric"><span>النسبة:</span><span>${size.percentage}%</span></div>
+                            </div>
+                        `;
+                    });
+                    
+                    performanceHTML += '</div></div>';
+                });
+                
+                performanceHTML += '</div>';
+                document.getElementById('performanceContent').innerHTML = performanceHTML;
+            }
+            
+            // Display Trending Sizes
+            if (data.trending_sizes) {
+                let trendsHTML = '<div class="chart-container">';
+                trendsHTML += '<h3 class="chart-title">أشهر المقاسات عبر جميع المنتجات</h3>';
+                trendsHTML += '<div class="size-breakdown">';
+                
+                data.trending_sizes.forEach(size => {
+                    trendsHTML += `
+                        <div class="size-item">
+                            <h4>مقاس ${size.size}</h4>
+                            <div class="metric"><span>إجمالي الطلبات:</span><span>${size.total_orders}</span></div>
+                            <div class="metric"><span>إجمالي الإيراد:</span><span>${size.total_revenue} ريال</span></div>
+                            <div class="metric"><span>عدد المنتجات:</span><span>${size.products_count}</span></div>
+                            <div class="metric"><span>متوسط الإيراد:</span><span>${size.avg_revenue_per_order} ريال</span></div>
+                        </div>
+                    `;
+                });
+                
+                trendsHTML += '</div></div>';
+                document.getElementById('trendsContent').innerHTML = trendsHTML;
+            }
+            
+            // Display ROI Analysis
+            if (data.roi_analysis) {
+                const roi = data.roi_analysis;
+                const roiHTML = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>${roi.products_with_charts}</h3>
+                            <p>منتجات مع جداول مقاسات</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>${roi.revenue_with_charts} ريال</h3>
+                            <p>إيرادات من منتجات بجداول مقاسات</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>${roi.avg_revenue_per_product_with_charts || 0} ريال</h3>
+                            <p>متوسط الإيراد لكل منتج</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>${roi.orders_with_charts}</h3>
+                            <p>طلبات من منتجات بجداول مقاسات</p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('roiContent').innerHTML = roiHTML;
+            }
+            
+            // Display Recommendations
+            if (data.recommendations) {
+                let recHTML = '<div class="recommendations">';
+                recHTML += '<h3>💡 توصيات لتحسين الأعمال</h3>';
+                
+                data.recommendations.forEach(rec => {
+                    recHTML += `
+                        <div class="recommendation-item">
+                            <h4>${rec.title}</h4>
+                            <p>${rec.description}</p>
+                        </div>
+                    `;
+                });
+                
+                recHTML += '</div>';
+                document.getElementById('recommendationsContent').innerHTML = recHTML;
+            }
+        }
+        
+        // Auto-load analytics on page load if store_id is in URL
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = urlParams.get('store_id');
+            if (storeId) {
+                document.getElementById('storeId').value = storeId;
+                // You can auto-load analytics here if needed
+            }
+        };
+    </script>
+</body>
+</html>
