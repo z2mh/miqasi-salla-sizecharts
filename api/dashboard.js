@@ -513,17 +513,20 @@ export default function handler(req, res) {
                 // Auto-save to database after deletion
                 if (currentProduct && Object.keys(sizeData).length > 0) {
                     try {
+                        // Debug: log what we're sending
+                        const dataToSend = {
+                            store_id: STORE_ID,
+                            product_id: currentProduct,
+                            chart_data: sizeData,
+                            unit: 'cm'
+                        };
+                        
                         const response = await fetch(\`\${API_BASE}/api/chart-data\`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({
-                                store_id: STORE_ID,
-                                product_id: currentProduct,
-                                chart_data: sizeData,
-                                unit: 'cm'
-                            })
+                            body: JSON.stringify(dataToSend)
                         });
                         
                         const data = await response.json();

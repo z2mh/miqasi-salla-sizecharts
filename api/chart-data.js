@@ -76,12 +76,23 @@ export default async function handler(req, res) {
       const chartKey = `sizechart:${store_id}:${product_id}`;
       const storeKey = `sizechart:store:${store_id}`;
       
+      // Check if chart already exists to preserve created_at date
+      let existingChart = null;
+      try {
+        existingChart = await kv.get(chartKey);
+        if (typeof existingChart === 'string') {
+          existingChart = JSON.parse(existingChart);
+        }
+      } catch (error) {
+        // Chart doesn't exist, will create new
+      }
+      
       const chartEntry = {
         store_id,
         product_id,
         sizes: chart_data,
         unit: unit || 'cm',
-        created_at: new Date().toISOString(),
+        created_at: existingChart?.created_at || new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
