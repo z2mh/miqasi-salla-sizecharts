@@ -522,11 +522,10 @@ export default function handler(req, res) {
                 }
                 updateSizesTable();
                 
-                // Auto-save to database after hiding
-                const activeSizes = Object.entries(sizeData).filter(([_, data]) => data.status !== 'hidden');
-                if (currentProduct && activeSizes.length > 0) {
+                // Always auto-save to database after deletion
+                if (currentProduct) {
                     try {
-                        // Debug: log what we're sending
+                        // Always save all data (including hidden sizes) to preserve analytics
                         const dataToSend = {
                             store_id: STORE_ID,
                             product_id: currentProduct,
@@ -545,14 +544,14 @@ export default function handler(req, res) {
                         const data = await response.json();
                         
                         if (data.success) {
-                            showMessage('تم حذف المقاس وحفظ التغييرات', 'success');
+                            showMessage('تم حذف المقاس وحفظ التغييرات تلقائياً', 'success');
                         } else {
                             showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
                         }
                     } catch (error) {
                         showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
                     }
-                } else if (currentProduct) {
+                } else {
                     showMessage('تم حذف المقاس', 'success');
                 }
             }
