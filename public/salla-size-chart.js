@@ -168,10 +168,14 @@ if (typeof window !== 'undefined' && window.salla) {
         animation: fadeIn 0.3s ease-out;
       `;
 
-      // Build size table with enhanced styling
+      // Build size table with enhanced styling - only show active sizes
       let sizeRows = '';
-      const sizes = Object.keys(chartData.sizes || {}).sort();
-      sizes.forEach((size, index) => {
+      const activeSizes = Object.entries(chartData.sizes || {})
+        .filter(([_, data]) => !data.status || data.status === 'active') // Show if no status or status is active
+        .map(([sizeName, _]) => sizeName)
+        .sort();
+        
+      activeSizes.forEach((size, index) => {
         const measurements = chartData.sizes[size];
         const rowClass = index % 2 === 0 ? 'even-row' : 'odd-row';
         sizeRows += `
@@ -634,11 +638,17 @@ if (typeof window !== 'undefined' && window.salla) {
       
       // Size calculation helper function
       function getSizeForBMI(bmiCategory, height, bodyType) {
-        const sizes = Object.keys(chartData.sizes || {}).sort();
+        // Only use active sizes for recommendations
+        const activeSizes = Object.entries(chartData.sizes || {})
+          .filter(([_, data]) => !data.status || data.status === 'active') // Show if no status or status is active
+          .map(([sizeName, _]) => sizeName)
+          .sort();
         
-        if (sizes.length === 0) {
+        if (activeSizes.length === 0) {
           return 'غير محدد';
         }
+        
+        const sizes = activeSizes;
         
         // Start with base size calculation using BMI
         let baseSize = 0;

@@ -471,7 +471,9 @@ export default function handler(req, res) {
             sizeData[sizeName] = {
                 chest: chest || null,
                 waist: waist || null,
-                length: length || null
+                length: length || null,
+                status: 'active',
+                created_at: new Date().toISOString()
             };
             
             // Clear inputs
@@ -488,7 +490,13 @@ export default function handler(req, res) {
             const tbody = document.getElementById('sizes-tbody');
             tbody.innerHTML = '';
             
+            // Only show active sizes in the dashboard
             Object.entries(sizeData).forEach(([sizeName, measurements]) => {
+                // Skip hidden/deleted sizes
+                if (measurements.status === 'hidden') {
+                    return;
+                }
+                
                 const row = document.createElement('tr');
                 row.innerHTML = \`
                     <td><strong>\${sizeName}</strong></td>
@@ -497,7 +505,7 @@ export default function handler(req, res) {
                     <td>\${measurements.length || '-'}</td>
                     <td>
                         <button onclick="removeSize('\${sizeName}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                            حذف
+                            إخفاء
                         </button>
                     </td>
                 \`;
@@ -506,12 +514,17 @@ export default function handler(req, res) {
         }
         
         async function removeSize(sizeName) {
-            if (confirm(\`هل تريد حذف المقاس \${sizeName}؟\`)) {
-                delete sizeData[sizeName];
+            if (confirm(\`هل تريد إخفاء المقاس \${sizeName}؟\`)) {
+                // Soft delete: mark as hidden instead of deleting
+                if (sizeData[sizeName]) {
+                    sizeData[sizeName].status = 'hidden';
+                    sizeData[sizeName].hidden_at = new Date().toISOString();
+                }
                 updateSizesTable();
                 
-                // Auto-save to database after deletion
-                if (currentProduct && Object.keys(sizeData).length > 0) {
+                // Auto-save to database after hiding
+                const activeSizes = Object.entries(sizeData).filter(([_, data]) => data.status !== 'hidden');
+                if (currentProduct && activeSizes.length > 0) {
                     try {
                         // Debug: log what we're sending
                         const dataToSend = {
@@ -532,21 +545,15 @@ export default function handler(req, res) {
                         const data = await response.json();
                         
                         if (data.success) {
-                            showMessage('تم حذف المقاس وحفظ التغييرات', 'success');
+                            showMessage('تم إخفاء المقاس وحفظ التغييرات', 'success');
                         } else {
-                            showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
+                            showMessage('تم إخفاء المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
                         }
                     } catch (error) {
-                        showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
+                        showMessage('تم إخفاء المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
                     }
-                } else if (currentProduct && Object.keys(sizeData).length === 0) {
-                    // If no sizes left, we could either:
-                    // 1. Delete the entire chart from database, or
-                    // 2. Save an empty chart
-                    // Let's save an empty chart to keep the product record
-                    showMessage('تم حذف المقاس - لا توجد مقاسات متبقية', 'success');
-                } else {
-                    showMessage('تم حذف المقاس', 'success');
+                } else if (currentProduct) {
+                    showMessage('تم إخفاء المقاس', 'success');
                 }
             }
         }
