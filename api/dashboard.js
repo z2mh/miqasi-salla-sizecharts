@@ -505,7 +505,7 @@ export default function handler(req, res) {
                     <td>\${measurements.length || '-'}</td>
                     <td>
                         <button onclick="removeSize('\${sizeName}')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                            إخفاء
+                            حذف
                         </button>
                     </td>
                 \`;
@@ -514,7 +514,7 @@ export default function handler(req, res) {
         }
         
         async function removeSize(sizeName) {
-            if (confirm(\`هل تريد إخفاء المقاس \${sizeName}؟\`)) {
+            if (confirm(\`هل تريد حذف المقاس \${sizeName}؟\`)) {
                 // Soft delete: mark as hidden instead of deleting
                 if (sizeData[sizeName]) {
                     sizeData[sizeName].status = 'hidden';
@@ -545,15 +545,15 @@ export default function handler(req, res) {
                         const data = await response.json();
                         
                         if (data.success) {
-                            showMessage('تم إخفاء المقاس وحفظ التغييرات', 'success');
+                            showMessage('تم حذف المقاس وحفظ التغييرات', 'success');
                         } else {
-                            showMessage('تم إخفاء المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
+                            showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: ' + (data.message || 'خطأ غير معروف'), 'error');
                         }
                     } catch (error) {
-                        showMessage('تم إخفاء المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
+                        showMessage('تم حذف المقاس محلياً، لكن فشل حفظ التغييرات: خطأ في الاتصال', 'error');
                     }
                 } else if (currentProduct) {
-                    showMessage('تم إخفاء المقاس', 'success');
+                    showMessage('تم حذف المقاس', 'success');
                 }
             }
         }
